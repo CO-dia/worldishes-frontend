@@ -1,7 +1,7 @@
 import type { JSX } from "react";
 import Image, { StaticImageData } from "next/image";
-import marcImg from "@/app/blog/_assets/images/authors/marc.png";
-import introducingSupabaseImg from "@/public/blog/introducing-supabase/header.png";
+/* import marcImg from "@/app/blog/_assets/images/authors/marc.png";
+import introducingSupabaseImg from "@/public/blog/introducing-supabase/header.png"; */
 
 // ==================================================================================================================================================================
 // BLOG CATEGORIES 🏷️
@@ -32,18 +32,18 @@ export const categories: categoryType[] = [
     titleShort: "Features",
     // The description of the category to display on the category page. Up to 160 characters.
     description:
-      "Here are the latest features we've added to ShipFast. I'm constantly improving our product to help you ship faster.",
+      "Here are the latest features we've added to Worldishes. I'm constantly improving our product to help you ship faster.",
     // A short version of the description above, only displayed in the <Header /> on mobile. Up to 60 characters.
-    descriptionShort: "Latest features added to ShipFast.",
+    descriptionShort: "Latest features added to Worldishes.",
   },
   {
     slug: categorySlugs.tutorial,
     title: "How Tos & Tutorials",
     titleShort: "Tutorials",
     description:
-      "Learn how to use ShipFast with these step-by-step tutorials. I'll show you how to ship faster and save time.",
+      "Learn how to use Worldishes with these step-by-step tutorials. I'll show you how to ship faster and save time.",
     descriptionShort:
-      "Learn how to use ShipFast with these step-by-step tutorials.",
+      "Learn how to use Worldishes with these step-by-step tutorials.",
   },
 ];
 
@@ -140,7 +140,7 @@ export const authors: authorType[] = [
     description:
       "Marc is a developer and an entrepreneur. He's built 20 startups in the last 3 years. 6 were profitable and 3 were acquired. He's currently building ByeDispute, the #1 Stripe Chargebacks Protection tool.",
     // The avatar of the author to display in the author's bio and avatar badge. It's better to use a local image, but you can also use an external image (https://...)
-    avatar: marcImg,
+    avatar: "marcImg",
     // A list of social links to display in the author's bio.
     socials: [
       {
@@ -198,7 +198,7 @@ const styles: {
 
 // All the blog articles data display in the /blog/[articleId].js pages.
 export const articles: articleType[] = [
-  {
+  /* {
     // The unique slug to use in the URL. It's also used to generate the canonical URL.
     slug: "introducing-supabase",
     // The title to display in the article page (h1). Less than 60 characters. It's also used to generate the meta title.
@@ -286,5 +286,5 @@ export const articles: articleType[] = [
         </section>
       </>
     ),
-  },
+  }, */
 ];
