@@ -6,26 +6,26 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import ButtonSignin from "./ButtonSignin";
-import logo from "@/app/icon.png";
 import config from "@/config";
+import HeaderLinks from "./HeaderLinks";
 
 const links: {
   href: string;
   label: string;
 }[] = [
-  {
-    href: "/#pricing",
-    label: "Pricing",
-  },
-  {
-    href: "/#testimonials",
-    label: "Reviews",
-  },
-  {
-    href: "/#faq",
-    label: "FAQ",
-  },
-];
+    {
+      href: "/#pricing",
+      label: "Pricing",
+    },
+    {
+      href: "/#testimonials",
+      label: "Reviews",
+    },
+    {
+      href: "/#faq",
+      label: "FAQ",
+    },
+  ];
 
 const cta: JSX.Element = <ButtonSignin extraStyle="btn-primary" />;
 
@@ -41,19 +41,19 @@ const Header = () => {
   }, [searchParams]);
 
   return (
-    <header className="bg-base-200">
+    <header className="w-full sticky top-0 z-50 bg-base-100 shadow-sm">
       <nav
-        className="container flex items-center justify-between px-8 py-4 mx-auto"
+        className="flex justify-between px-8 py-4 mx-auto"
         aria-label="Global"
       >
         {/* Your logo/name on large screens */}
-        <div className="flex lg:flex-1">
+        <div className="flex sm:flex-1">
           <Link
             className="flex items-center gap-2 shrink-0 "
             href="/"
             title={`${config.appName} homepage`}
           >
-            <Image
+            {/*<Image
               src={logo}
               alt={`${config.appName} logo`}
               className="w-8"
@@ -61,12 +61,12 @@ const Header = () => {
               priority={true}
               width={32}
               height={32}
-            />
+            /> */}
             <span className="font-extrabold text-lg">{config.appName}</span>
           </Link>
         </div>
         {/* Burger button to open menu on mobile */}
-        <div className="flex lg:hidden">
+        <div className="flex sm:hidden">
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
@@ -90,22 +90,15 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Your links on large screens */}
-        <div className="hidden lg:flex lg:justify-center lg:gap-12 lg:items-center">
-          {links.map((link) => (
-            <Link
-              href={link.href}
-              key={link.href}
-              className="link link-hover"
-              title={link.label}
-            >
-              {link.label}
-            </Link>
-          ))}
+        {/* Your links on medium and large screens */}
+        <div className="hidden sm:flex sm:justify-center sm:gap-12 sm:items-center">
+          <HeaderLinks />
         </div>
 
-        {/* CTA on large screens */}
-        <div className="hidden lg:flex lg:justify-end lg:flex-1">{cta}</div>
+        {/* CTA on medium and large screens */}
+        <div className="hidden sm:flex sm:justify-end sm:flex-1">
+          <ButtonSignin text="Login" />
+        </div>
       </nav>
 
       {/* Mobile menu, show/hide based on menu state. */}
@@ -120,7 +113,7 @@ const Header = () => {
               title={`${config.appName} homepage`}
               href="/"
             >
-              <Image
+              {/*<Image
                 src={logo}
                 alt={`${config.appName} logo`}
                 className="w-8"
@@ -128,7 +121,7 @@ const Header = () => {
                 priority={true}
                 width={32}
                 height={32}
-              />
+              />*/}
               <span className="font-extrabold text-lg">{config.appName}</span>
             </Link>
             <button
@@ -172,7 +165,9 @@ const Header = () => {
             </div>
             <div className="divider"></div>
             {/* Your CTA on small screens */}
-            <div className="flex flex-col">{cta}</div>
+            <div className="flex flex-col">
+              <ButtonSignin text="Login" />
+            </div>
           </div>
         </div>
       </div>

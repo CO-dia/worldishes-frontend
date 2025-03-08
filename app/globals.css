@@ -20,3 +20,47 @@ progress::-webkit-progress-value {
     @apply !capitalize;
   }
 }
+
+section {
+  margin: 1rem 0;
+}
+
+@media (max-width: 639px) {
+  .details-sections h2 {
+    font-size: 2.2rem;
+  }
+
+  .details-sections p {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .details-sections h2 {
+    font-size: 2.5rem;
+  }
+
+  .details-sections p {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .details-sections h2 {
+    font-size: 3rem;
+  }
+
+  .details-sections p {
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .details-sections h2 {
+    font-size: 3.5rem;
+  }
+
+  .details-sections p {
+    font-size: 1.6rem;
+  }
+}

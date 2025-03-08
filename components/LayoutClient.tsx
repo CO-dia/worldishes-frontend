@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { Tooltip } from "react-tooltip";
+import Header from "./Header";
 import config from "@/config";
 
 // All the client wrappers are here (they can't be in server components)
@@ -20,8 +21,12 @@ const ClientLayout = ({ children }: { children: ReactNode }) => {
         {/* Show a progress bar at the top when navigating between pages */}
         <NextTopLoader color={config.colors.main} showSpinner={false} />
 
-        {/* Content inside app/page.js files  */}
-        {children}
+        <Header />
+
+        <main className="flex flex-col items-center w-[95vw] md:w-[80vw] lg:w-[65vw]">
+          {/* Content inside app/page.js files  */}
+          {children}
+        </main>
 
         {/* Show Success/Error messages anywhere from the app with toast() */}
         <Toaster
