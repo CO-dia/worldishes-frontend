@@ -23,7 +23,7 @@ const ClientLayout = ({ children }: { children: ReactNode }) => {
 
         <Header />
 
-        <main className="flex flex-col items-center w-[95vw] md:w-[80vw] lg:w-[65vw]">
+        <main className="flex flex-col items-center w-[95vw] md:w-[80vw] lg:w-[75vw]">
           {/* Content inside app/page.js files  */}
           {children}
         </main>

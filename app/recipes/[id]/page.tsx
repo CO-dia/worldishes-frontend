@@ -28,36 +28,40 @@ const getImages = async (id: string): Promise<Array<ImageType>> => {
 export default async function Page({ params }: { params: { id: string } }) {
   const recipe = await getRecipeById(params.id);
   const images = await getImages(params.id);
-  const showFullImage = false;
   const recipeTitle = recipe.name;
-  const imageUrl = images[0].link;
+  const imageUrl = images?.[0]?.link ?? "/images/test-ratio-2.jpg";
+
+  const title = (
+    <>
+      {getUnicodeFlagIcon(recipe.countryCode)}
+      <h1>{recipeTitle}</h1>
+    </>
+  );
+
   return (
-    <article className="mt-5">
-      {images && images.length > 0 && (
-        <div className="relative w-full mb-5">
+    <article className="w-full mt-5">
+      <div className="relative w-full mb-5">
+        <div className="w-full aspect-[16/9] relative">
           <Image
             src={imageUrl}
             alt={`Image of ${recipe.name} from ${getUnicodeFlagIcon(recipe.countryCode)}`}
-            layout="intrinsic"
-            width={700}
-            height={showFullImage ? 400 : 200}
-            objectFit="cover"
-            className="mx-auto" // Centers the image horizontally
+            layout="fill" // Forces it to fill the container
+            objectFit="cover" // Keeps original aspect ratio and fits inside
+            className="rounded-lg shadow-lg"
           />
-
-          {/* Title Section Positioned Over the Image */}
-          <div className="absolute flex bottom-0 left-0 py-3 px-8 text-white text-3xl md:text-5xl lg:text-6xl font-semibold bg-gray-800/60 w-full">
-            {getUnicodeFlagIcon(recipe.countryCode)}
-            <h1>{recipeTitle}</h1>
-          </div>
         </div>
-      )}
+
+        {/* Title Section Positioned Over the Image */}
+        <div className="absolute flex bottom-0 left-0 py-3 px-8 gap-3 text-white text-3xl md:text-5xl lg:text-6xl font-semibold bg-gray-800/60 w-full">
+          {title}
+        </div>
+      </div>
 
       <UserComponent user={recipe.user} />
 
       {/* Description Section */}
       <section className="details-sections mt-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <FileText className="w-8 h-8 md:w-12 md:h-12" />
           <h2 className="font-semibold text-gray-800">Description</h2>
         </div>
@@ -66,7 +70,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       {/* Preparation Time Section */}
       <section className="details-sections">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Clock className="w-8 h-8 md:w-12 md:h-12" />
           <h2 className="font-semibold text-gray-800">Preparation Time</h2>
         </div>
@@ -75,7 +79,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       {/* Recipe Instructions Section */}
       <section className="details-sections">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <CookingPot className="w-8 h-8 md:w-12 md:h-12" />
           <h2 className="font-semibold text-gray-800">Recipe</h2>
         </div>
@@ -85,7 +89,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       {/* YouTube Link Section */}
       {recipe.youtubeLink && (
         <section className="details-sections">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <Youtube className="w-8 h-8 md:w-12 md:h-12" />
             <h2 className="font-semibold text-gray-800">Watch the Recipe</h2>
           </div>
@@ -103,11 +107,11 @@ export default async function Page({ params }: { params: { id: string } }) {
 
       {/* Rating Section */}
       <section className="details-sections">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Star className="w-8 h-8 md:w-12 md:h-12" />
           <h2 className="font-semibold text-gray-800">Rating</h2>
         </div>
-        <Rating dish={recipe} />
+        <Rating dish={recipe} canRate />
       </section>
     </article>
   );

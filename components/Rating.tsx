@@ -3,8 +3,16 @@
 import { Dish } from "@/types/dish";
 import { Rating as RatingType } from "@/types/rating";
 import { useEffect, useState } from "react";
+import { FaStarHalfAlt, FaStar, FaRegStar } from "react-icons/fa";
+import RateModal from "./RateModal";
 
-export default function Rating({ dish }: { dish: Dish }) {
+export default function Rating({
+  dish,
+  canRate,
+}: {
+  dish: Dish;
+  canRate?: boolean;
+}) {
   console.log(dish);
   const [rating, setRating] = useState<RatingType>();
 
@@ -22,5 +30,23 @@ export default function Rating({ dish }: { dish: Dish }) {
     getRatingUser(dish.id);
   }, []);
 
-  return <p className="text-gray-600">{dish.ratingAverage} / 5</p>;
+  return (
+    <div className="flex flex-col items-center text-3xl">
+      <div className="flex gap-1">
+        {[1, 2, 3, 4, 5].map((i) => {
+          if (dish.ratingAverage >= i) {
+            return <FaStar key={i} className="text-primary" />;
+          } else if (dish.ratingAverage + 0.5 >= i) {
+            return <FaStarHalfAlt key={i} className="text-primary" />;
+          } else {
+            return <FaRegStar key={i} className="text-primary" />;
+          }
+        })}
+      </div>
+      <p className="text-gray-600">
+        {dish.ratingAverage} / 5 ({dish.ratingCount})
+      </p>
+      {canRate && <RateModal />}
+    </div>
+  );
 }
