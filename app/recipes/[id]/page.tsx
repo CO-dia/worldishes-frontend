@@ -8,7 +8,7 @@ import Image from "next/image";
 const getRecipeById = async (id: string): Promise<Dish> => {
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
 
   return res.json();
@@ -17,7 +17,7 @@ const getRecipeById = async (id: string): Promise<Dish> => {
 const getImages = async (id: string): Promise<Array<ImageType>> => {
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}/images`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
 
   return res.json();
@@ -29,8 +29,18 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <h2>Recipes</h2>
-      <div>{recipe.name}</div>
+      {images && images.length > 0 && (
+        <Image
+          src={images[0].link}
+          width={600}
+          height={100}
+          alt={`Image of ${recipe.name} from ${getUnicodeFlagIcon(
+            recipe.countryCode,
+          )}`}
+        />
+      )}
+      <h2 className="text-9xl">{recipe.name}</h2>
+      <UserComponent user={recipe.user} />
       <div className="text-9xl">{getUnicodeFlagIcon(recipe.countryCode)}</div>
       <div>{recipe.description}</div>
       <div>{recipe.preparationTime}</div>
@@ -38,17 +48,6 @@ export default async function Page({ params }: { params: { id: string } }) {
       <div>{recipe.youtubeLink}</div>
       <div>{recipe.ratingAverage}</div>
       <UserComponent user={null} />
-      <UserComponent user={recipe.user} />
-      {images && images.length > 0 && (
-        <Image
-          src={images[0].link}
-          width={800}
-          height={200}
-          alt={`Image of ${recipe.name} from ${getUnicodeFlagIcon(
-            recipe.countryCode
-          )}`}
-        />
-      )}
     </>
   );
 }
