@@ -12,10 +12,12 @@ import { FaStarHalfAlt, FaStar, FaRegStar } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Form } from "./ui/form";
 import { useState } from "react";
+import { Textarea } from "./ui/textarea";
+import { Label } from "./ui/label";
 
 export default function RateModal() {
-  const [stars, setStars] = useState(1);
-  const [idHover, setIdHover] = useState(1);
+  const [stars, setStars] = useState(5);
+  const [idHover, setIdHover] = useState(5);
 
   return (
     <>
@@ -27,8 +29,7 @@ export default function RateModal() {
           <DialogHeader>
             <DialogTitle>Rate this dish</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              If you have tried this recipe, please rate it below.
             </DialogDescription>
           </DialogHeader>
 
@@ -50,6 +51,12 @@ export default function RateModal() {
                 );
               })}
             </div>
+
+            <Label>Comment</Label>
+
+            <Textarea name="comment" />
+
+            <Button type="submit">Rate</Button>
           </Form>
         </DialogContent>
       </Dialog>

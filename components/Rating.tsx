@@ -32,14 +32,14 @@ export default function Rating({
 
   return (
     <div className="flex flex-col items-center text-3xl">
-      <div className="flex gap-1">
+      <div className="flex gap-1 text-amber-600">
         {[1, 2, 3, 4, 5].map((i) => {
           if (dish.ratingAverage >= i) {
-            return <FaStar key={i} className="text-primary" />;
+            return <FaStar key={i} />;
           } else if (dish.ratingAverage + 0.5 >= i) {
-            return <FaStarHalfAlt key={i} className="text-primary" />;
+            return <FaStarHalfAlt key={i} />;
           } else {
-            return <FaRegStar key={i} className="text-primary" />;
+            return <FaRegStar key={i} />;
           }
         })}
       </div>
