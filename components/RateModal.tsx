@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { FaStarHalfAlt, FaStar, FaRegStar } from "react-icons/fa";
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
 import { Form } from "./ui/form";
@@ -27,8 +27,10 @@ export default function RateModal() {
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rate this dish</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-2xl text-center">
+              Rate this dish
+            </DialogTitle>
+            <DialogDescription className="text-center">
               If you have tried this recipe, please rate it below.
             </DialogDescription>
           </DialogHeader>
@@ -38,6 +40,7 @@ export default function RateModal() {
               {[1, 2, 3, 4, 5].map((i) => {
                 return (
                   <button
+                    key={i}
                     onClick={() => setStars(i)}
                     className="text-3xl"
                     onMouseEnter={() => setIdHover(i)}
@@ -52,9 +55,15 @@ export default function RateModal() {
               })}
             </div>
 
-            <Label>Comment</Label>
+            <Label htmlFor="comment">Comment</Label>
 
-            <Textarea name="comment" />
+            <Textarea
+              name="comment"
+              className="resize-none h-32"
+              maxLength={500}
+            />
+
+            <small className="text-end text-xs">0 / 500</small>
 
             <Button type="submit">Rate</Button>
           </Form>

@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  scroll-behavior: smooth !important;
-}
-
 /* It makes the HTML progress bar filling smooth when value change. */
 progress::-webkit-progress-value {
   transition: 0.6s width ease-out;
@@ -74,11 +69,20 @@ progress::-webkit-progress-value {
   }
 }
 
+html,
+body {
+  scroll-behavior: smooth !important;
+}
+
 section {
   margin: 1rem 0;
 }
 
 @media (max-width: 639px) {
+  h1 {
+    font-size: 2rem;
+  }
+
   .details-sections {
     margin: 2rem 0;
   }
@@ -93,6 +97,10 @@ section {
 }
 
 @media (min-width: 640px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+
   .details-sections {
     margin: 3rem 0;
   }
@@ -107,6 +115,10 @@ section {
 }
 
 @media (min-width: 768px) {
+  h1 {
+    font-size: 3rem;
+  }
+
   .details-sections {
     margin: 4rem 0;
   }
@@ -121,6 +133,10 @@ section {
 }
 
 @media (min-width: 1024px) {
+  h1 {
+    font-size: 3.5rem;
+  }
+
   .details-sections {
     margin: 5rem 0;
   }

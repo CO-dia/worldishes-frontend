@@ -47,6 +47,8 @@ export default async function Page({ params }: { params: { id: string } }) {
             alt={`Image of ${recipe.name} from ${getUnicodeFlagIcon(recipe.countryCode)}`}
             layout="fill" // Forces it to fill the container
             objectFit="cover" // Keeps original aspect ratio and fits inside
+            priority
+            quality={75}
             className="rounded-lg shadow-lg"
           />
         </div>
@@ -57,7 +59,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <UserComponent user={recipe.user} />
+      <UserComponent user={recipe.user} anonymous={recipe.anonymous} />
 
       {/* Description Section */}
       <section className="details-sections mt-5">
@@ -87,7 +89,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </section>
 
       {/* YouTube Link Section */}
-      {recipe.youtubeLink && (
+      {!recipe.youtubeLink && (
         <section className="details-sections">
           <div className="flex items-center gap-4">
             <Youtube className="w-8 h-8 md:w-12 md:h-12" />

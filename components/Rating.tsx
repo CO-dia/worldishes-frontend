@@ -5,6 +5,7 @@ import { Rating as RatingType } from "@/types/rating";
 import { useEffect, useState } from "react";
 import { FaStarHalfAlt, FaStar, FaRegStar } from "react-icons/fa";
 import RateModal from "./RateModal";
+import CallAPI from "@/utils/CallAPI";
 
 export default function Rating({
   dish,
@@ -18,17 +19,16 @@ export default function Rating({
 
   useEffect(() => {
     const getRatingUser = async (id: string): Promise<RatingType> => {
-      const res = await fetch(
-        `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}/rating-user?userId=${dish.user.id}`,
-        { cache: "no-store" },
+      const { data } = await CallAPI(
+        "GET",
+        `/dishes/${id}/rating-user?userId=${dish.user.id}`,
       );
-
-      const rating = await res.json();
+      console.log("User rating", data);
       setRating(rating);
     };
 
     getRatingUser(dish.id);
-  }, []);
+  }, [dish]);
 
   return (
     <div className="flex flex-col items-center text-3xl">

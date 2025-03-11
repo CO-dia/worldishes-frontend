@@ -11,5 +11,6 @@ export interface Dish {
   youtubeLink: string;
   ratingAverage: number;
   ratingCount: number;
+  anonymous: boolean;
   user?: User;
 }

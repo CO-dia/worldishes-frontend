@@ -5,7 +5,6 @@ import { Dish } from "@/types/dish";
 const getRecipes = async (): Promise<Array<Dish>> => {
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes`,
-    { cache: "no-store" }
   );
 
   return res.json();
