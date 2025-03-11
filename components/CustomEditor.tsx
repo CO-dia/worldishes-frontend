@@ -6,10 +6,42 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 const CustomEditor = () => {
   // Initial state for the editor
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [length, setLength] = useState(0);
+  const maxLength = 5000;
 
   // Function to handle changes in the editor
   const onEditorStateChange = (newEditorState) => {
+    console.log("New Editor State:", newEditorState);
+    console.log("Lenght:", length);
+    const content = newEditorState.getCurrentContent();
+    const plainText = content.getPlainText(); // Extract plain text
+    const tempLength = plainText.length;
+
+    if (tempLength > maxLength) {
+      return; // Stop updating if the limit is exceeded
+    }
+
+    setLength(tempLength);
     setEditorState(newEditorState);
+    setEditorState(newEditorState);
+  };
+
+  // Function to handle pasting (to prevent exceeding limit)
+  const handleBeforeInput = (chars, editorState) => {
+    const currentLength = editorState.getCurrentContent().getPlainText().length;
+
+    if (currentLength + chars.length > maxLength) {
+      return "handled"; // Prevent input
+    }
+
+    return "not-handled"; // Allow input
+  };
+
+  // Function to handle pasting
+  const handlePastedText = (pastedText, _, editorState) => {
+    const currentLength = editorState.getCurrentContent().getPlainText().length;
+
+    return currentLength + pastedText.length > maxLength; // Allow pasting
   };
 
   // Function to get the editor's content as JSON
@@ -20,12 +52,13 @@ const CustomEditor = () => {
   };
 
   return (
-    <div
-      style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "5px" }}
-    >
+    <div className="flex flex-col rounded-md border border-[#ddd]">
       <Editor
+        editorClassName="min-h-[150px] px-3"
         editorState={editorState}
         onEditorStateChange={onEditorStateChange}
+        handleBeforeInput={handleBeforeInput} // Blocks exceeding input
+        handlePastedText={handlePastedText} // Blocks exceeding pasting
         toolbar={{
           options: [
             "inline",
@@ -39,12 +72,7 @@ const CustomEditor = () => {
           ],
           inline: {
             inDropdown: false,
-            options: [
-              "bold",
-              "italic",
-              "underline",
-              "strikethrough",
-            ],
+            options: ["bold", "italic", "underline", "strikethrough"],
           },
           blockType: {
             inDropdown: true,
@@ -65,10 +93,10 @@ const CustomEditor = () => {
           },
           list: {
             inDropdown: false,
-            options: ["unordered", "ordered", "indent", "outdent"],
+            options: ["unordered", "ordered"],
           },
           textAlign: {
-            inDropdown: false,
+            inDropdown: true,
             options: ["left", "center", "right", "justify"],
           },
           colorPicker: {
@@ -103,7 +131,7 @@ const CustomEditor = () => {
             ],
           },
           link: {
-            inDropdown: false,
+            inDropdown: true,
             showOpenOptionOnHover: true,
             defaultTargetOption: "_self",
             options: ["link", "unlink"],
@@ -244,12 +272,9 @@ const CustomEditor = () => {
           },
         }}
       />
-      <button
-        onClick={saveContent}
-        style={{ marginTop: "10px", padding: "5px 10px", cursor: "pointer" }}
-      >
-        Save Content
-      </button>
+      <small className="w-full text-end pr-3 pb-3 text-xs">
+        {length} / {maxLength}
+      </small>
     </div>
   );
 };

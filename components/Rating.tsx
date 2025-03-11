@@ -44,7 +44,7 @@ export default function Rating({
         })}
       </div>
       <p className="text-gray-600">
-        {dish.ratingAverage} / 5 ({dish.ratingCount})
+        {dish.ratingAverage} ({dish.ratingCount})
       </p>
       {canRate && <RateModal />}
     </div>

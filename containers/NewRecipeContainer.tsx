@@ -1,5 +1,8 @@
+import DetailsRecipe from "@/components/Forms/DetailsRecipe";
+import { IngredientsRecipe } from "@/components/Forms/IngredientsRecipe";
+import InstructionsRecipe from "@/components/Forms/InstructionsRecipe";
 import { Form } from "@/components/ui/form";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNewRecipe } from "@/contexts/NewRecipeContext";
 
 export default function NewRecipeContainer() {
@@ -8,13 +11,13 @@ export default function NewRecipeContainer() {
 
   return (
     <>
-      <h1>Create dish</h1>
+      <h1>Create dish recipe</h1>
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
         className="w-full mt-5"
       >
-        <TabsList className="flex justify-center">
+        <TabsList className="flex justify-center mb-6">
           <TabsTrigger value="details" className="w-full">
             Details
           </TabsTrigger>
@@ -25,10 +28,21 @@ export default function NewRecipeContainer() {
             Instructions
           </TabsTrigger>
         </TabsList>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <TabsContent value="details" className="space-y-6">
+              <DetailsRecipe />
+            </TabsContent>
+            <TabsContent value="ingredients" className="space-y-6">
+              <IngredientsRecipe />
+            </TabsContent>
+            <TabsContent value="instructions" className="space-y-6">
+              <InstructionsRecipe />
+            </TabsContent>
+          </form>
+        </Form>
       </Tabs>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}></form>
-      </Form>
     </>
   );
 }
