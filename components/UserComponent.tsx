@@ -17,12 +17,12 @@ const UserComponent = ({
           "https://yt3.ggpht.com/yti/ANjgQV-pY3jaj_nJVR9Gr1yHMdeE7yw8vb24K64MgMhuiot3cU8=s88-c-k-c0x00ffffff-no-rj"
         }
         className="rounded-full"
-        width={50}
-        height={50}
+        width={45}
+        height={45}
         alt={`Image of ${user.name}`}
       />
     ) : (
-      <CircleUserRound size={60} className="bg-gray-300 p-0 rounded-full" />
+      <CircleUserRound size={50} className="bg-gray-300 p-0 rounded-full" />
     );
 
   const name = (!anonymous && user?.name) || "Anonymous";
@@ -30,7 +30,10 @@ const UserComponent = ({
   return (
     <div className="flex items-center gap-2">
       {image}
-      <span className="text-xl text-gray-600">{name}</span>
+      <p className="flex flex-col">
+        <span className="text-xs text-gray-400">Recipe by</span>
+        <span className="text-md text-gray-600">{name}</span>
+      </p>
     </div>
   );
 };

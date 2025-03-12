@@ -41,16 +41,9 @@ export function IngredientsRecipe() {
   return (
     <>
       <div className="flex items-center justify-between my-6">
-        <Label className="text-md font-medium">Ingredients</Label>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => append({ name: "", quantity: 0, unit: "" })}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Ingredient
-        </Button>
+        <Label className="text-md font-medium">
+          Ingredients <span>*</span>
+        </Label>
       </div>
 
       {fields.map((field, index) => (
@@ -79,7 +72,14 @@ export function IngredientsRecipe() {
               <FormItem className="w-24">
                 <FormLabel>Quantity</FormLabel>
                 <FormControl>
-                  <Input placeholder="200" {...field} />
+                  <Input
+                    placeholder="200"
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(Number.parseInt(e.target.value))
+                    }
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -124,7 +124,19 @@ export function IngredientsRecipe() {
           </Button>
         </div>
       ))}
-      <div className="flex justify-between">
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        size="sm"
+        onClick={() => append({ name: "", quantity: 0, unit: "" })}
+      >
+        <Plus className="h-4 w-4 mr-2" />
+        Add Ingredient
+      </Button>
+
+      <div className="flex justify-between pt-10">
         <Button
           type="button"
           variant="outline"

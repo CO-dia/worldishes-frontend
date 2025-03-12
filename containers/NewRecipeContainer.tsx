@@ -9,6 +9,7 @@ export default function NewRecipeContainer() {
   const { form, onSubmit, activeTab, setActiveTab, fields, append, remove } =
     useNewRecipe();
 
+  console.log({ form });
   return (
     <>
       <h1>Create dish recipe</h1>
@@ -42,6 +43,14 @@ export default function NewRecipeContainer() {
             </TabsContent>
           </form>
         </Form>
+
+        {form.formState.errors && (
+          <div className="text-red-500">
+            {Object.values(form.formState.errors).map((error, index) => (
+              <p key={index}>{error.message}</p> // Accessing `message`
+            ))}
+          </div>
+        )}
       </Tabs>
     </>
   );

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import type { JSX } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import ButtonSignin from "./ButtonSignin";
 import config from "@/config";
 import HeaderLinks from "./HeaderLinks";
@@ -14,16 +13,12 @@ const links: {
   label: string;
 }[] = [
     {
-      href: "/#pricing",
-      label: "Pricing",
+      href: "/recipes",
+      label: "Recipes",
     },
     {
-      href: "/#testimonials",
-      label: "Reviews",
-    },
-    {
-      href: "/#faq",
-      label: "FAQ",
+      href: "/recipes/new",
+      label: "Create a recipe",
     },
   ];
 
@@ -92,7 +87,7 @@ const Header = () => {
 
         {/* Your links on medium and large screens */}
         <div className="hidden sm:flex sm:justify-center sm:gap-12 sm:items-center">
-          <HeaderLinks />
+          <HeaderLinks links={links} />
         </div>
 
         {/* CTA on medium and large screens */}

@@ -74,6 +74,10 @@ body {
   scroll-behavior: smooth !important;
 }
 
+label span {
+  color: red;
+}
+
 section {
   margin: 1rem 0;
 }
@@ -88,7 +92,7 @@ section {
   }
 
   .details-sections h2 {
-    font-size: 2.2rem;
+    font-size: 1.6rem;
   }
 
   .details-sections p {
@@ -106,7 +110,7 @@ section {
   }
 
   .details-sections h2 {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .details-sections p {
@@ -124,7 +128,7 @@ section {
   }
 
   .details-sections h2 {
-    font-size: 3rem;
+    font-size: 2.4rem;
   }
 
   .details-sections p {
@@ -142,7 +146,7 @@ section {
   }
 
   .details-sections h2 {
-    font-size: 3.5rem;
+    font-size: 2.8rem;
   }
 
   .details-sections p {

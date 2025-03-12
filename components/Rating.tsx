@@ -9,15 +9,20 @@ import CallAPI from "@/utils/CallAPI";
 
 export default function Rating({
   dish,
-  canRate,
+  canRate = false,
+  showCount = true,
+  containerClassName = "flex flex-col items-center text-3xl",
 }: {
   dish: Dish;
   canRate?: boolean;
+  showCount?: boolean;
+  containerClassName?: string;
 }) {
   console.log(dish);
   const [rating, setRating] = useState<RatingType>();
 
-  useEffect(() => {
+  {
+    /* useEffect(() => {
     const getRatingUser = async (id: string): Promise<RatingType> => {
       const { data } = await CallAPI(
         "GET",
@@ -28,11 +33,12 @@ export default function Rating({
     };
 
     getRatingUser(dish.id);
-  }, [dish]);
+  }, [dish]);*/
+  }
 
   return (
-    <div className="flex flex-col items-center text-3xl">
-      <div className="flex gap-1 text-amber-600">
+    <div className={containerClassName}>
+      <div className="flex gap-1 text-yellow-400">
         {[1, 2, 3, 4, 5].map((i) => {
           if (dish.ratingAverage >= i) {
             return <FaStar key={i} />;
@@ -44,7 +50,7 @@ export default function Rating({
         })}
       </div>
       <p className="text-gray-600">
-        {dish.ratingAverage} ({dish.ratingCount})
+        {dish.ratingAverage} {showCount && `(${dish?.ratingCount ?? 0})`}
       </p>
       {canRate && <RateModal />}
     </div>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 // Form management
 import * as z from "zod";
@@ -14,6 +14,7 @@ import {
 
 // Navigation
 import { useRouter } from "next/navigation";
+import CallAPI, { CallAPIURL } from "@/utils/CallAPI";
 
 const ingredientSchema = z.object({
   name: z.string().min(1, "Ingredient name is required"),
@@ -53,12 +54,12 @@ const NewRecipeContext = createContext<{
   remove: UseFieldArrayRemove;
 }>({
   form: {} as UseFormReturn<FormValues>,
-  onSubmit: () => { },
+  onSubmit: () => {},
   activeTab: "details",
-  setActiveTab: () => { },
+  setActiveTab: () => {},
   fields: {} as FieldArrayWithId<FormValues, "ingredients">[],
-  append: () => { },
-  remove: () => { },
+  append: () => {},
+  remove: () => {},
 });
 
 export default function NewRecipeProvider({
@@ -88,12 +89,20 @@ export default function NewRecipeProvider({
     name: "ingredients",
   });
 
-  function onSubmit(data: FormValues) {
+  async function onSubmit(data: FormValues) {
     console.log("Form submitted:", data);
+    const res = await CallAPI(
+      "POST",
+      CallAPIURL.dishes.get,
+      "",
+      { userId: "ca22af2e-bd7c-4c8b-b070-e133d16c205e", ...data },
+      true
+    );
+    console.log("Response:", res);
     // Here you would typically send the data to your API
     // For now, we'll just show a success message and redirect
     alert("Recipe created successfully!");
-    router.push("/recipes");
+    //router.push("/recipes");
   }
 
   return (

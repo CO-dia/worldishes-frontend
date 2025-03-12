@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState, convertToRaw } from "draft-js";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-const CustomEditor = () => {
+const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
   // Initial state for the editor
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const [length, setLength] = useState(0);
   const maxLength = 5000;
+  const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
 
   // Function to handle changes in the editor
   const onEditorStateChange = (newEditorState) => {
@@ -23,7 +23,7 @@ const CustomEditor = () => {
 
     setLength(tempLength);
     setEditorState(newEditorState);
-    setEditorState(newEditorState);
+    setLastTypedTime(Date.now()); // Update last typed time
   };
 
   // Function to handle pasting (to prevent exceeding limit)
@@ -49,7 +49,19 @@ const CustomEditor = () => {
     const contentState = editorState.getCurrentContent();
     const rawContent = convertToRaw(contentState);
     console.log("Saved Content:", JSON.stringify(rawContent)); // Save to DB
+    onChange(JSON.stringify(rawContent));
   };
+
+  // Function to auto-save after 1 second of no typing
+  useEffect(() => {
+    if (!lastTypedTime) return;
+
+    const timeout = setTimeout(() => {
+      saveContent();
+    }, 1000); // 1 second debounce
+
+    return () => clearTimeout(timeout); // Cleanup timeout
+  }, [lastTypedTime]); // Triggered when lastTypedTime updates
 
   return (
     <div className="flex flex-col rounded-md border border-[#ddd]">

@@ -22,9 +22,13 @@ export default function InstructionsRecipe() {
         name="recipe"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-md">Recipe Instructions</FormLabel>
+            <FormLabel className="text-md">
+              Recipe Instructions <span>*</span>
+            </FormLabel>
             <FormControl>
-              <CustomEditor />
+              <CustomEditor
+                onChange={(newValue: string) => field.onChange(newValue)}
+              />
             </FormControl>
             <FormDescription>
               Provide detailed step-by-step instructions for preparing your

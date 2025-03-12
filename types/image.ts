@@ -1,5 +1,6 @@
 export interface Image {
-    id: string;
-    link: string;
-    dishId: string;
+  id: string;
+  link: string;
+  dishId: string;
+  cover: boolean;
 }

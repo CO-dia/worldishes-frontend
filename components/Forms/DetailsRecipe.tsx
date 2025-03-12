@@ -17,9 +17,24 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { useEffect, useState } from "react";
 
 export default function DetailsRecipe() {
   const { form, setActiveTab } = useNewRecipe();
+  const [countries, setCountries] = useState<
+    [{ label: string; value: string }] | []
+  >([]);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  useEffect(() => {
+    fetch(
+      "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setCountries(data.countries);
+        setSelectedCountry(data.userSelectValue);
+      });
+  }, []);
 
   return (
     <>
@@ -28,7 +43,9 @@ export default function DetailsRecipe() {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-md">Recipe Title</FormLabel>
+            <FormLabel className="text-md">
+              Recipe Title <span>*</span>
+            </FormLabel>
             <FormControl>
               <Input placeholder="Delicious Chocolate Cake" {...field} />
             </FormControl>
@@ -41,7 +58,9 @@ export default function DetailsRecipe() {
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-md">Description</FormLabel>
+            <FormLabel className="text-md">
+              Description <span>*</span>
+            </FormLabel>
             <FormControl>
               <Textarea
                 placeholder="A brief description of your recipe..."
@@ -57,39 +76,81 @@ export default function DetailsRecipe() {
         )}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormField
-          control={form.control}
-          name="preparationTime"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-md">Cooking Time</FormLabel>
-              <FormControl>
-                <Input placeholder="30" {...field} />
-              </FormControl>
-              <FormDescription>min</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <div className="flex flex-col md:flex-row w-full gap-4">
+        <div className="flex justify-stretch w-full md:w-1/2 gap-4">
+          <FormField
+            control={form.control}
+            name="preparationTime"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-md">
+                  Cooking Time <span>*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="30"
+                    type="number"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(Number.parseInt(e.target.value))
+                    }
+                  />
+                </FormControl>
+                <FormDescription>min</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="servings"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-md">
+                  Servings <span>*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={1}
+                    placeholder="4"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(Number.parseInt(e.target.value))
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
 
         <FormField
           control={form.control}
-          name="servings"
+          name="countryCode"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-md">Servings</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  min={1}
-                  placeholder="4"
-                  {...field}
-                  onChange={(e) =>
-                    field.onChange(Number.parseInt(e.target.value))
-                  }
-                />
-              </FormControl>
+            <FormItem className="w-full md:w-1/2">
+              <FormLabel className="text-md">From</FormLabel>
+              <Select
+                value={field.value}
+                onValueChange={field.onChange}
+                defaultValue={selectedCountry}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select country" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {countries.map((country, index) => (
+                    <SelectItem key={index} value={country.value}>
+                      {country.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -101,32 +162,6 @@ export default function DetailsRecipe() {
           Next: Ingredients
         </Button>
       </div>
-
-      {/*
-      <FormField
-        control={form.control}
-        name="countryCode"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Country of Origin</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select country" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                countryOptions.map((country) => (
-                                <SelectItem key={country} value={country}>
-                                  {country}
-                                </SelectItem>
-                              ))
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        )}
-      />*/}
     </>
   );
 }

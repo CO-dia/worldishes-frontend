@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Dish } from "@/types/dish";
+import { CardRecipe } from "@/components/CardRecipe";
 
 // Fetch recipes on the server for SEO
 const getRecipes = async (): Promise<Array<Dish>> => {
@@ -12,17 +13,16 @@ const getRecipes = async (): Promise<Array<Dish>> => {
 
 export default async function Page() {
   const recipes = await getRecipes();
+  console.log({ recipes });
   return (
     <>
-      <h2>Recipes</h2>
-      <ul>
+      <h1>Recipes</h1>
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {recipes &&
           recipes.map((recipe) => (
-            <li key={recipe.id}>
-              <Link href={`/recipes/${recipe.id}`}>{recipe.name}</Link>
-            </li>
+            <CardRecipe recipe={recipe} key={recipe.id} />
           ))}
-      </ul>
+      </div>
     </>
   );
 }

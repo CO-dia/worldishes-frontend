@@ -6,8 +6,10 @@ export interface Dish {
   name: string;
   description: string;
   preparationTime: number;
+  servings: number;
   recipe: string;
   countryCode: string;
+  coverImageUrl: string;
   youtubeLink: string;
   ratingAverage: number;
   ratingCount: number;
