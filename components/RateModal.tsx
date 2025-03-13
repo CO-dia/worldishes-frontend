@@ -35,38 +35,38 @@ export default function RateModal() {
             </DialogDescription>
           </DialogHeader>
 
-          <Form>
-            <div className="flex gap-2" onMouseLeave={() => setIdHover(stars)}>
-              {[1, 2, 3, 4, 5].map((i) => {
-                return (
-                  <button
-                    key={i}
-                    onClick={() => setStars(i)}
-                    className="text-3xl"
-                    onMouseEnter={() => setIdHover(i)}
-                  >
-                    {i <= idHover ? (
-                      <FaStar className="text-amber-600" />
-                    ) : (
-                      <FaRegStar className="text-amber-600" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+          {/*<Form> */}
+          <div className="flex gap-2" onMouseLeave={() => setIdHover(stars)}>
+            {[1, 2, 3, 4, 5].map((i) => {
+              return (
+                <button
+                  key={i}
+                  onClick={() => setStars(i)}
+                  className="text-3xl"
+                  onMouseEnter={() => setIdHover(i)}
+                >
+                  {i <= idHover ? (
+                    <FaStar className="text-yellow-500" />
+                  ) : (
+                    <FaRegStar className="text-yellow-500" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
 
-            <Label htmlFor="comment">Comment</Label>
+          <Label htmlFor="comment">Comment</Label>
 
-            <Textarea
-              name="comment"
-              className="resize-none h-32"
-              maxLength={500}
-            />
+          <Textarea
+            name="comment"
+            className="resize-none h-32"
+            maxLength={500}
+          />
 
-            <small className="text-end text-xs">0 / 500</small>
+          <small className="text-end text-xs">0 / 500</small>
 
-            <Button type="submit">Rate</Button>
-          </Form>
+          <Button type="submit">Rate</Button>
+          {/*</Form>*/}
         </DialogContent>
       </Dialog>
     </>

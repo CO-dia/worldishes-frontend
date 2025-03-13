@@ -11,7 +11,10 @@ import { Youtube } from "lucide-react";
 import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
-import CustomEditor from "../CustomEditor";
+import dynamic from "next/dynamic";
+
+// Dynamically import CustomEditor (only on the client)
+const CustomEditor = dynamic(() => import("../CustomEditor"), { ssr: false });
 
 export default function InstructionsRecipe() {
   const { form, setActiveTab } = useNewRecipe();
@@ -26,9 +29,7 @@ export default function InstructionsRecipe() {
               Recipe Instructions <span>*</span>
             </FormLabel>
             <FormControl>
-              <CustomEditor
-                onChange={(newValue: string) => field.onChange(newValue)}
-              />
+              <CustomEditor onChange={(value) => field.onChange(value)} />
             </FormControl>
             <FormDescription>
               Provide detailed step-by-step instructions for preparing your

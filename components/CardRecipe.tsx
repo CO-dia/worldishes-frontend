@@ -27,15 +27,12 @@ export function CardRecipe({ recipe }: { recipe: Dish }) {
       </div>
       <div className="p-6 space-y-4">
         <CardHeader className="p-0">
-          <CardTitle className="text-3xl">{recipe.name}</CardTitle>
-          <div className="w-1/3">
-            <Rating
-              dish={recipe}
-              canRate={false}
-              showCount={false}
-              containerClassName="flex items-center gap-2 text-xl"
-            />
-          </div>
+          <CardTitle className="text-2xl truncate">{recipe.name}</CardTitle>
+          <Rating
+            dish={recipe}
+            canRate={false}
+            containerClassName="flex items-center gap-2 text-xl"
+          />
         </CardHeader>
 
         <CardContent className="p-0 space-y-4 text-gray-500">

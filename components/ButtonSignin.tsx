@@ -16,7 +16,7 @@ const ButtonSignin = ({
   text?: string;
   extraStyle?: string;
 }) => {
-  const router = useRouter();
+  /* const router = useRouter();
   const { data: session, status } = useSession();
 
   const handleClick = () => {
@@ -50,12 +50,12 @@ const ButtonSignin = ({
         {session.user?.name || session.user?.email || "Account"}
       </Link>
     );
-  }
+  } */
 
   return (
     <button
       className={`btn ${extraStyle ? extraStyle : ""}`}
-      onClick={handleClick}
+      onClick={() => {}} //handleClick}
     >
       {text}
     </button>

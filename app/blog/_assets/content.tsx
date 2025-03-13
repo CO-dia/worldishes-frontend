@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import Image, { StaticImageData } from "next/image";
+import { StaticImageData } from "next/image";
 /* import marcImg from "@/app/blog/_assets/images/authors/marc.png";
 import introducingSupabaseImg from "@/public/blog/introducing-supabase/header.png"; */
 
@@ -81,7 +81,7 @@ const socialIcons: {
         y="0px"
         viewBox="0 0 1668.56 1221.19"
         className="w-9 h-9"
-        // Using a dark theme? ->  className="w-9 h-9 fill-white"
+      // Using a dark theme? ->  className="w-9 h-9 fill-white"
       >
         <g id="layer1" transform="translate(52.390088,-25.058597)">
           <path
@@ -182,7 +182,8 @@ export type articleType = {
 };
 
 // These styles are used in the content of the articles. When you update them, all articles will be updated.
-const styles: {
+{
+  /*const styles: {
   [key: string]: string;
 } = {
   h2: "text-2xl lg:text-4xl font-bold tracking-tight mb-4 text-base-content",
@@ -194,7 +195,8 @@ const styles: {
   code: "text-sm font-mono bg-neutral text-neutral-content p-6 rounded-box my-4 overflow-x-scroll select-all",
   codeInline:
     "text-sm font-mono bg-base-300 px-1 py-0.5 rounded-box select-all",
-};
+};*/
+}
 
 // All the blog articles data display in the /blog/[articleId].js pages.
 export const articles: articleType[] = [

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Dish } from "@/types/dish";
 import { CardRecipe } from "@/components/CardRecipe";
 
@@ -17,7 +16,7 @@ export default async function Page() {
   return (
     <>
       <h1>Recipes</h1>
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
         {recipes &&
           recipes.map((recipe) => (
             <CardRecipe recipe={recipe} key={recipe.id} />

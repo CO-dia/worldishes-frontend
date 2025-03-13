@@ -10,12 +10,10 @@ import CallAPI from "@/utils/CallAPI";
 export default function Rating({
   dish,
   canRate = false,
-  showCount = true,
   containerClassName = "flex flex-col items-center text-3xl",
 }: {
   dish: Dish;
   canRate?: boolean;
-  showCount?: boolean;
   containerClassName?: string;
 }) {
   console.log(dish);
@@ -49,9 +47,9 @@ export default function Rating({
           }
         })}
       </div>
-      <p className="text-gray-600">
-        {dish.ratingAverage} {showCount && `(${dish?.ratingCount ?? 0})`}
-      </p>
+      <span className="text-gray-600">
+        ({dish.ratingAverage ?? 0}){` • ${dish?.ratingCount ?? 0}`}
+      </span>
       {canRate && <RateModal />}
     </div>
   );

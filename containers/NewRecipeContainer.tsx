@@ -1,3 +1,5 @@
+"use client";
+
 import DetailsRecipe from "@/components/Forms/DetailsRecipe";
 import { IngredientsRecipe } from "@/components/Forms/IngredientsRecipe";
 import InstructionsRecipe from "@/components/Forms/InstructionsRecipe";
@@ -6,8 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNewRecipe } from "@/contexts/NewRecipeContext";
 
 export default function NewRecipeContainer() {
-  const { form, onSubmit, activeTab, setActiveTab, fields, append, remove } =
-    useNewRecipe();
+  const { form, onSubmit, activeTab, setActiveTab } = useNewRecipe();
 
   console.log({ form });
   return (
@@ -44,8 +45,11 @@ export default function NewRecipeContainer() {
           </form>
         </Form>
 
-        {form.formState.errors && (
-          <div className="text-red-500">
+        {Object.keys(form.formState.errors).length > 0 && (
+          <div
+            id="errors-box"
+            className="mt-4 p-4 space-y-4 text-red-500 border border-red-500"
+          >
             {Object.values(form.formState.errors).map((error, index) => (
               <p key={index}>{error.message}</p> // Accessing `message`
             ))}

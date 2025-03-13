@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from "react";
+"use client";
+
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 // Form management
 import * as z from "zod";
@@ -17,27 +19,34 @@ import { useRouter } from "next/navigation";
 import CallAPI, { CallAPIURL } from "@/utils/CallAPI";
 
 const ingredientSchema = z.object({
-  name: z.string().min(1, "Ingredient name is required"),
-  quantity: z.number().int().positive("Quantity must be a positive number"),
-  unit: z.string().min(1, "Unit is required"),
+  name: z.string(),
+  quantity: z.number(),
+  unit: z.string(),
 });
 
+const detailsSection = " - Details Section : ";
+const ingredientsSection = "- Ingredients Section : ";
+const instructionsSection = "- Instructions Section : ";
+
 const formSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, detailsSection + "Name is required"),
   description: z
     .string()
-    .min(10, "Description must be at least 10 characters")
-    .max(500, "Description must be at most 500 characters"),
+    .min(10, detailsSection + "Description must be at least 10 characters")
+    .max(500, detailsSection + "Description must be at most 500 characters"),
   preparationTime: z
     .number()
     .int()
-    .positive("Preparation time must be a positive number"),
-  servings: z.number().int().positive("Servings must be a positive number"),
-  recipe: z.string().min(1, "Recipe is required"),
-  countryCode: z.string().min(1, "Country code is required"),
+    .positive(detailsSection + "Preparation time must be a positive number"),
+  servings: z
+    .number()
+    .int()
+    .positive(detailsSection + "Servings must be a positive number"),
+  countryCode: z.string(),
   ingredients: z
     .array(ingredientSchema)
-    .min(1, "At least one ingredient is required"),
+    .min(1, ingredientsSection + "At least one ingredient is required"),
+  recipe: z.string().min(1, instructionsSection + "Recipe is required"),
   youtubeLink: z.string(),
   anonymous: z.boolean(),
 });
@@ -77,8 +86,8 @@ export default function NewRecipeProvider({
       description: "",
       preparationTime: 0,
       servings: 0,
-      recipe: "",
       countryCode: "",
+      recipe: "",
       youtubeLink: "",
       anonymous: false,
     },
@@ -95,7 +104,7 @@ export default function NewRecipeProvider({
       "POST",
       CallAPIURL.dishes.get,
       "",
-      { userId: "ca22af2e-bd7c-4c8b-b070-e133d16c205e", ...data },
+      { userId: "587b666d-e995-4157-ab25-863e75e15ae1", ...data },
       true
     );
     console.log("Response:", res);
@@ -104,6 +113,33 @@ export default function NewRecipeProvider({
     alert("Recipe created successfully!");
     //router.push("/recipes");
   }
+
+  useEffect(() => {
+    if (
+      !form.formState.isSubmitting &&
+      form.formState.isSubmitted &&
+      form.formState.errors
+    ) {
+      const errors = form.formState.errors;
+      if (
+        errors.name ||
+        errors.description ||
+        errors.preparationTime ||
+        errors.servings
+      ) {
+        setActiveTab("details");
+      } else if (errors.ingredients) {
+        setActiveTab("ingredients");
+      } else if (errors.recipe) {
+        setActiveTab("instructions");
+      }
+
+      const errorsBox = document.getElementById("errors-box");
+      errorsBox?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [form.formState.isSubmitted, form.formState.isSubmitting]);
 
   return (
     <NewRecipeContext.Provider

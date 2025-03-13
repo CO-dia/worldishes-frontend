@@ -1,7 +1,4 @@
-"use client";
-
-import { ReactNode } from "react";
-import { SessionProvider } from "next-auth/react";
+import { ReactNode, Suspense } from "react";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "react-hot-toast";
 import { Tooltip } from "react-tooltip";
@@ -17,30 +14,32 @@ import config from "@/config";
 const ClientLayout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <SessionProvider>
-        {/* Show a progress bar at the top when navigating between pages */}
-        <NextTopLoader color={config.colors.main} showSpinner={false} />
+      {/* Show a progress bar at the top when navigating between pages */}
+      <NextTopLoader color={config.colors.main} showSpinner={false} />
 
+      <Suspense fallback={<div>Loading...</div>}>
         <Header />
+      </Suspense>
 
-        <main className="flex flex-col my-10 w-[95vw] md:w-[80vw] lg:w-[75vw]">
-          {/* Content inside app/page.js files  */}
-          {children}
-        </main>
+      <main className="flex flex-col my-10 w-[95vw] md:w-[80vw] lg:w-[75vw]">
+        {/* Content inside app/page.js files  */}
+        {children}
+      </main>
 
-        {/* Show Success/Error messages anywhere from the app with toast() */}
-        <Toaster
-          toastOptions={{
-            duration: 3000,
-          }}
-        />
+      {/* Show Success/Error messages anywhere from the app with toast() */}
+      <Toaster
+        toastOptions={{
+          duration: 3000,
+        }}
+      />
 
-        {/* Show a tooltip if any JSX element has these 2 attributes: data-tooltip-id="tooltip" data-tooltip-content="" */}
+      {/* Show a tooltip if any JSX element has these 2 attributes: data-tooltip-id="tooltip" data-tooltip-content="" */}
+      {/* <Suspense>
         <Tooltip
           id="tooltip"
           className="z-[60] !opacity-100 max-w-sm shadow-lg"
         />
-      </SessionProvider>
+      </Suspense> */}
     </>
   );
 };

@@ -1,4 +1,3 @@
-import { validateCsrfToken } from "@/utils/CSRF";
 import { rateLimitByKey } from "@/utils/RateLimiter";
 import Axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
@@ -49,7 +48,7 @@ export async function GET(request: NextRequest) {
       params: values.parameters,
       headers: {
         Authorization: `Bearer ${jwt}`,
-      }, 
+      },
     });
     response = new Response(JSON.stringify({ response: res.data }));
   } catch (error: any) {
@@ -74,7 +73,7 @@ export async function POST(request: NextRequest) {
     if (validationData.status !== 200) {
       return NextResponse.json(
         { error: validationData.error },
-        { status: validationData.status }
+        { status: validationData.status },
       );
     }
 
@@ -159,7 +158,7 @@ export async function PUT(request: NextRequest) {
 async function securityValidation(
   request: NextRequest,
   keyPrefix: string,
-  limit?: number
+  limit?: number,
 ): Promise<{ status: number; error: string }> {
   let response: { status: number; error: string } = { status: 200, error: "" };
   try {

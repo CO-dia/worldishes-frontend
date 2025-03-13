@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { Popover, Transition } from "@headlessui/react";
 import Link from "next/link";
-import Image from "next/image";
 /* import logo from "@/app/icon.png"; */
 import config from "@/config";
 import { categories } from "../content";
@@ -15,11 +14,11 @@ const links: {
   href: string;
   label: string;
 }[] = [
-  {
-    href: "/blog/",
-    label: "All Posts",
-  },
-];
+    {
+      href: "/blog/",
+      label: "All Posts",
+    },
+  ];
 
 const cta: JSX.Element = (
   <ButtonSignin text="Prevent disputes" extraStyle="btn-primary md:btn-sm" />
@@ -39,9 +38,8 @@ const ButtonPopoverCategories = () => {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className={`w-5 h-5 duration-200 ${
-                open ? "transform rotate-180 " : ""
-              }`}
+              className={`w-5 h-5 duration-200 ${open ? "transform rotate-180 " : ""
+                }`}
             >
               <path
                 fillRule="evenodd"
@@ -110,9 +108,8 @@ const ButtonAccordionCategories = () => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className={`w-5 h-5 duration-200 ${
-            isOpen ? "transform rotate-180 " : ""
-          }`}
+          className={`w-5 h-5 duration-200 ${isOpen ? "transform rotate-180 " : ""
+            }`}
         >
           <path
             fillRule="evenodd"

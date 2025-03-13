@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw } from "draft-js";
+import { DraftHandleValue, EditorState, convertToRaw } from "draft-js";
 
 const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
   // Initial state for the editor
@@ -10,7 +10,7 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
   const [lastTypedTime, setLastTypedTime] = useState<number | null>(null);
 
   // Function to handle changes in the editor
-  const onEditorStateChange = (newEditorState) => {
+  const onEditorStateChange = (newEditorState: EditorState) => {
     console.log("New Editor State:", newEditorState);
     console.log("Lenght:", length);
     const content = newEditorState.getCurrentContent();
@@ -27,7 +27,11 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
   };
 
   // Function to handle pasting (to prevent exceeding limit)
-  const handleBeforeInput = (chars, editorState) => {
+  const handleBeforeInput = (
+    chars: string,
+    editorState: EditorState,
+    eventTimeStamp: number
+  ): DraftHandleValue => {
     const currentLength = editorState.getCurrentContent().getPlainText().length;
 
     if (currentLength + chars.length > maxLength) {
@@ -38,7 +42,12 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
   };
 
   // Function to handle pasting
-  const handlePastedText = (pastedText, _, editorState) => {
+  const handlePastedText = (
+    pastedText: string,
+    html: string,
+    editorState: EditorState,
+    onChange: (editorState: EditorState) => void
+  ) => {
     const currentLength = editorState.getCurrentContent().getPlainText().length;
 
     return currentLength + pastedText.length > maxLength; // Allow pasting
@@ -69,6 +78,7 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
         editorClassName="min-h-[150px] px-3"
         editorState={editorState}
         onEditorStateChange={onEditorStateChange}
+        //@ts-ignore
         handleBeforeInput={handleBeforeInput} // Blocks exceeding input
         handlePastedText={handlePastedText} // Blocks exceeding pasting
         toolbar={{
@@ -78,7 +88,6 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
             "fontSize",
             "list",
             "textAlign",
-            "colorPicker",
             "link",
             "emoji",
           ],
