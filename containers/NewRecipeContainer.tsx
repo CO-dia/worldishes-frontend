@@ -10,7 +10,6 @@ import { useNewRecipe } from "@/contexts/NewRecipeContext";
 export default function NewRecipeContainer() {
   const { form, onSubmit, activeTab, setActiveTab } = useNewRecipe();
 
-  console.log({ form });
   return (
     <>
       <h1>Create dish recipe</h1>

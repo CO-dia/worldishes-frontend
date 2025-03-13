@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import NewRecipeContainer from "@/containers/NewRecipeContainer";
 import NewRecipeProvider from "@/contexts/NewRecipeContext";
 

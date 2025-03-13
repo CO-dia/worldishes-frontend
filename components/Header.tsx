@@ -7,28 +7,34 @@ import Link from "next/link";
 import ButtonSignin from "./ButtonSignin";
 import config from "@/config";
 import HeaderLinks from "./HeaderLinks";
+import { Session } from "next-auth";
+import ButtonAccount from "./ButtonAccount";
 
 const links: {
   href: string;
   label: string;
 }[] = [
-    {
-      href: "/recipes",
-      label: "Recipes",
-    },
-    {
-      href: "/recipes/new",
-      label: "Create a recipe",
-    },
-  ];
-
-const cta: JSX.Element = <ButtonSignin extraStyle="btn-primary" />;
+  {
+    href: "/recipes",
+    label: "Recipes",
+  },
+  {
+    href: "/recipes/new",
+    label: "Create a recipe",
+  },
+];
 
 // A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
 // The header is responsive, and on mobile, the links are hidden behind a burger button.
-const Header = () => {
+const Header = ({ session }: { session: Session }) => {
   const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const cta: JSX.Element = session ? (
+    <ButtonAccount session={session} />
+  ) : (
+    <ButtonSignin extraStyle="btn-primary" />
+  );
 
   // setIsOpen(false) when the route changes (i.e: when the user clicks on a link on mobile)
   useEffect(() => {
@@ -91,9 +97,7 @@ const Header = () => {
         </div>
 
         {/* CTA on medium and large screens */}
-        <div className="hidden sm:flex sm:justify-end sm:flex-1">
-          <ButtonSignin text="Login" />
-        </div>
+        <div className="hidden sm:flex sm:justify-end sm:flex-1">{cta}</div>
       </nav>
 
       {/* Mobile menu, show/hide based on menu state. */}
@@ -160,9 +164,7 @@ const Header = () => {
             </div>
             <div className="divider"></div>
             {/* Your CTA on small screens */}
-            <div className="flex flex-col">
-              <ButtonSignin text="Login" />
-            </div>
+            <div className="flex flex-col">{cta}</div>
           </div>
         </div>
       </div>

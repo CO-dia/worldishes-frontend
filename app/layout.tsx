@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Viewport } from "next";
 import { getSEOTags } from "@/libs/seo";
-import ClientLayout from "@/components/LayoutClient";
+import Layout from "@/components/Layout";
 import config from "@/config";
 import "./globals.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -22,8 +22,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" data-theme={config.colors.theme}>
       <body className="flex flex-col items-center">
         {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
-        <ClientLayout>{children}</ClientLayout>
+        <Layout>{children}</Layout>
       </body>
-    </html> 
+    </html>
   );
 }

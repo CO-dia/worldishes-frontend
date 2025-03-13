@@ -1,5 +1,7 @@
+import { authOptions } from "@/libs/next-auth";
 import { rateLimitByKey } from "@/utils/RateLimiter";
 import Axios from "axios";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 // Shared Axios instance
@@ -61,19 +63,28 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  console.log({ session });
+
   console.log("POST callOut");
+
+  const authToken = request.cookies.get("next-auth.session-token").value;
+  if (!authToken) {
+    return new Response(JSON.stringify({ error: "Unauthorized access" }), {
+      status: 401,
+    });
+  }
+
   let response;
 
   try {
     const { searchParams } = new URL(request.url);
 
-    const jwt = request.cookies.get("currentUser")?.value;
-
     const validationData = await securityValidation(request, "POST");
     if (validationData.status !== 200) {
       return NextResponse.json(
         { error: validationData.error },
-        { status: validationData.status },
+        { status: validationData.status }
       );
     }
 
@@ -92,7 +103,7 @@ export async function POST(request: NextRequest) {
     response = await axiosInstance.post(url, values.payload, {
       params: values.parameters,
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
   } catch (error: any) {
@@ -107,12 +118,17 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   console.log("PUT callOut");
 
+  const authToken = request.cookies.get("next-auth.session-token").value;
+  if (!authToken) {
+    return new Response(JSON.stringify({ error: "Unauthorized access" }), {
+      status: 401,
+    });
+  }
+
   let response;
 
   try {
     const { searchParams } = new URL(request.url);
-
-    const jwt = request.cookies.get("currentUser")?.value;
 
     const validationData = await securityValidation(request, "PUT");
     if (validationData.status !== 200) {
@@ -136,7 +152,7 @@ export async function PUT(request: NextRequest) {
     response = await axiosInstance.put(url, values.payload, {
       params: values.parameters,
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
   } catch (error: any) {
@@ -158,7 +174,7 @@ export async function PUT(request: NextRequest) {
 async function securityValidation(
   request: NextRequest,
   keyPrefix: string,
-  limit?: number,
+  limit?: number
 ): Promise<{ status: number; error: string }> {
   let response: { status: number; error: string } = { status: 200, error: "" };
   try {

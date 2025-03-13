@@ -21,7 +21,7 @@ export function CardRecipe({ recipe }: { recipe: Dish }) {
           src={recipe.coverImageUrl || "/images/placeholder-recipe.jpg"}
           alt={recipe.name}
           fill
-          className="object-cover"
+          className="object-cover rounded-t-lg"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
@@ -29,6 +29,7 @@ export function CardRecipe({ recipe }: { recipe: Dish }) {
         <CardHeader className="p-0">
           <CardTitle className="text-2xl truncate">{recipe.name}</CardTitle>
           <Rating
+            session={null}
             dish={recipe}
             canRate={false}
             containerClassName="flex items-center gap-2 text-xl"

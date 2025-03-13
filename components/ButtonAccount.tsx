@@ -3,8 +3,9 @@
 
 import { useState } from "react";
 import { Popover, Transition } from "@headlessui/react";
-import { useSession, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import apiClient from "@/libs/api";
+import { Session } from "next-auth";
 
 // A button to show user some account actions
 //  1. Billing: open a Stripe Customer Portal to manage their billing (cancel subscription, update payment method, etc.).
@@ -12,8 +13,7 @@ import apiClient from "@/libs/api";
 //     This is only available if the customer has a customerId (they made a purchase previously)
 //  2. Logout: sign out and go back to homepage
 // See more at https://shipfa.st/docs/components/buttonAccount
-const ButtonAccount = () => {
-  const { data: session, status } = useSession();
+const ButtonAccount = ({ session }: { session: Session }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSignOut = () => {
@@ -39,7 +39,7 @@ const ButtonAccount = () => {
   };
 
   // Don't show anything if not authenticated (we don't have any info about the user)
-  if (status === "unauthenticated") return null;
+  if (!session) return null;
 
   return (
     <Popover className="relative z-10">
@@ -94,7 +94,7 @@ const ButtonAccount = () => {
             <Popover.Panel className="absolute left-0 z-10 mt-3 w-screen max-w-[16rem] transform">
               <div className="overflow-hidden rounded-xl shadow-xl ring-1 ring-base-content ring-opacity-5 bg-base-100 p-1">
                 <div className="space-y-0.5 text-sm">
-                  <button
+                  {/* <button
                     className="flex items-center gap-2 hover:bg-base-300 duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
                     onClick={handleBilling}
                   >
@@ -111,7 +111,7 @@ const ButtonAccount = () => {
                       />
                     </svg>
                     Billing
-                  </button>
+                  </button> */}
                   <button
                     className="flex items-center gap-2 hover:bg-error/20 hover:text-error duration-200 py-1.5 px-4 w-full rounded-lg font-medium"
                     onClick={handleSignOut}

@@ -15,16 +15,19 @@ import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 
-export default function RateModal() {
+export default function RateModal({
+  open,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
   const [stars, setStars] = useState(5);
   const [idHover, setIdHover] = useState(5);
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Rate</Button>
-        </DialogTrigger>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-2xl text-center">

@@ -104,14 +104,14 @@ export default function NewRecipeProvider({
       "POST",
       CallAPIURL.dishes.get,
       "",
-      { userId: "587b666d-e995-4157-ab25-863e75e15ae1", ...data },
+      { ...data },
       true
     );
     console.log("Response:", res);
     // Here you would typically send the data to your API
     // For now, we'll just show a success message and redirect
     alert("Recipe created successfully!");
-    //router.push("/recipes");
+    // router.push("/recipes");
   }
 
   useEffect(() => {

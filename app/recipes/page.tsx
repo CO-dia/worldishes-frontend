@@ -4,7 +4,7 @@ import { CardRecipe } from "@/components/CardRecipe";
 // Fetch recipes on the server for SEO
 const getRecipes = async (): Promise<Array<Dish>> => {
   const res = await fetch(
-    `${process.env.API_URL}${process.env.API_VERSION}dishes`,
+    `${process.env.API_URL}${process.env.API_VERSION}dishes`
   );
 
   return res.json();
@@ -12,7 +12,7 @@ const getRecipes = async (): Promise<Array<Dish>> => {
 
 export default async function Page() {
   const recipes = await getRecipes();
-  console.log({ recipes });
+
   return (
     <>
       <h1>Recipes</h1>

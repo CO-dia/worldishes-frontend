@@ -6,6 +6,8 @@ import Image from "next/image";
 import Rating from "@/components/Rating";
 import { CookingPot, Youtube } from "lucide-react";
 import dynamic from "next/dynamic";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/libs/next-auth";
 
 const RecipeEditor = dynamic(() => import("@/components/DisplayRecipe"), {
   ssr: false,
@@ -16,7 +18,7 @@ const getRecipeById = async (id: string): Promise<Dish> => {
   console.log({ id });
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}`,
-    { cache: "no-store" },
+    { cache: "no-store" }
   );
 
   return res.json();
@@ -25,7 +27,7 @@ const getRecipeById = async (id: string): Promise<Dish> => {
 const getImages = async (id: string): Promise<Array<ImageType>> => {
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}/images`,
-    { cache: "no-store" },
+    { cache: "no-store" }
   );
 
   return res.json();
@@ -34,11 +36,11 @@ const getImages = async (id: string): Promise<Array<ImageType>> => {
 export default async function Page({ params }: { params: { id: string } }) {
   const recipe = await getRecipeById(params.id);
   const images = await getImages(params.id);
+  const session = await getServerSession(authOptions);
   const recipeTitle = recipe.name;
   const imageUrl = images?.[0]?.link ?? "/images/placeholder-recipe.jpg";
-  console.log({ recipe });
+
   const title = (countryCode: string) => {
-    console.log({ countryCode });
     return (
       <>
         {getUnicodeFlagIcon(countryCode)}
@@ -53,7 +55,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         <Image
           src={imageUrl}
           alt={`Image of ${recipe.name} from ${getUnicodeFlagIcon(
-            recipe.countryCode,
+            recipe.countryCode
           )}`}
           layout="fill" // Forces it to fill the container
           objectFit="cover" // Keeps original aspect ratio and fits inside
@@ -70,6 +72,7 @@ export default async function Page({ params }: { params: { id: string } }) {
         {recipe.description}
       </p>
       <Rating
+        session={session}
         dish={recipe}
         canRate
         containerClassName="flex items-center text-xl gap-4 mb-8"
@@ -108,7 +111,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <iframe
               className="w-full h-64 rounded-lg shadow-lg"
               src={`https://www.youtube.com/embed/${new URL(
-                recipe.youtubeLink,
+                recipe.youtubeLink
               ).searchParams.get("v")}`}
               title="Recipe Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

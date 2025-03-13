@@ -6,18 +6,45 @@ import { useEffect, useState } from "react";
 import { FaStarHalfAlt, FaStar, FaRegStar } from "react-icons/fa";
 import RateModal from "./RateModal";
 import CallAPI from "@/utils/CallAPI";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "./ui/button";
+import { Session } from "next-auth";
 
 export default function Rating({
+  session,
   dish,
   canRate = false,
   containerClassName = "flex flex-col items-center text-3xl",
 }: {
+  session: Session;
   dish: Dish;
   canRate?: boolean;
   containerClassName?: string;
 }) {
-  console.log(dish);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isRating = searchParams.get("rating");
+
   const [rating, setRating] = useState<RatingType>();
+  const [openRatingModal, setOpenRatingModal] = useState(
+    session && isRating === "true"
+  );
+
+  const openModal = () => {
+    if (session) {
+      setOpenRatingModal(true);
+    } else {
+      router.push(
+        `/api/auth/signin?callbackUrl=%2Frecipes%2F${dish?.id}?rating=true`
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isRating && session) {
+      console.log("Rating", isRating);
+    }
+  }, [isRating]);
 
   {
     /* useEffect(() => {
@@ -50,7 +77,15 @@ export default function Rating({
       <span className="text-gray-600">
         ({dish.ratingAverage ?? 0}){` • ${dish?.ratingCount ?? 0}`}
       </span>
-      {canRate && <RateModal />}
+
+      {canRate && (
+        <>
+          <Button type="button" variant="outline" onClick={openModal}>
+            Rate
+          </Button>
+          <RateModal open={openRatingModal} setOpen={setOpenRatingModal} />
+        </>
+      )}
     </div>
   );
 }
