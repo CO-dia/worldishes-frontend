@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/recipes",
+        permanent: true, // Use false if it's temporary
+      },
+    ];
+  },
   images: {
     domains: [
       // NextJS <Image> component needs to whitelist domains for src={}

@@ -84,9 +84,11 @@ export async function POST(request: NextRequest) {
     if (validationData.status !== 200) {
       return NextResponse.json(
         { error: validationData.error },
-        { status: validationData.status }
+        { status: validationData.status },
       );
     }
+
+    console.log("securityValidation", validationData);
 
     const values = {
       resource: searchParams.get("resource"),
@@ -94,6 +96,7 @@ export async function POST(request: NextRequest) {
       payload: await request.json(),
     };
 
+    console.log("values POST", values);
     if (values.parameters) {
       values.parameters = JSON.parse(values.parameters);
     }
@@ -174,7 +177,7 @@ export async function PUT(request: NextRequest) {
 async function securityValidation(
   request: NextRequest,
   keyPrefix: string,
-  limit?: number
+  limit?: number,
 ): Promise<{ status: number; error: string }> {
   let response: { status: number; error: string } = { status: 200, error: "" };
   try {

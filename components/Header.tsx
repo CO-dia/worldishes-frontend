@@ -14,15 +14,15 @@ const links: {
   href: string;
   label: string;
 }[] = [
-  {
-    href: "/recipes",
-    label: "Recipes",
-  },
-  {
-    href: "/recipes/new",
-    label: "Create a recipe",
-  },
-];
+    {
+      href: "/recipes",
+      label: "Recipes",
+    },
+    {
+      href: "/recipes/new",
+      label: "Create a recipe",
+    },
+  ];
 
 // A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
 // The header is responsive, and on mobile, the links are hidden behind a burger button.
@@ -33,7 +33,7 @@ const Header = ({ session }: { session: Session }) => {
   const cta: JSX.Element = session ? (
     <ButtonAccount session={session} />
   ) : (
-    <ButtonSignin extraStyle="btn-primary" />
+    <ButtonSignin extraStyle="btn-primary" text="Login" />
   );
 
   // setIsOpen(false) when the route changes (i.e: when the user clicks on a link on mobile)

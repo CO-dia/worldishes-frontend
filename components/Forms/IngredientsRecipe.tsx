@@ -75,6 +75,7 @@ export function IngredientsRecipe() {
                   <Input
                     placeholder="200"
                     type="number"
+                    min={0}
                     {...field}
                     onChange={(e) =>
                       field.onChange(Number.parseInt(e.target.value))

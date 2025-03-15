@@ -20,14 +20,15 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 
 export default function DetailsRecipe() {
-  const { form, setActiveTab } = useNewRecipe();
+  const { form, setActiveTab, setCoverInfos } = useNewRecipe();
   const [countries, setCountries] = useState<
     [{ label: string; value: string }] | []
   >([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+
   useEffect(() => {
     fetch(
-      "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code"
+      "https://valid.layercode.workers.dev/list/countries?format=select&flags=true&value=code",
     )
       .then((response) => response.json())
       .then((data) => {
@@ -53,6 +54,34 @@ export default function DetailsRecipe() {
           </FormItem>
         )}
       />
+      <FormField
+        control={form.control}
+        name="coverImage"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-md">Cover image</FormLabel>
+            <FormControl>
+              <Input
+                accept="image/*"
+                type="file"
+                name={field.name}
+                ref={field.ref}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    setCoverInfos(file);
+
+                    field.onChange(file);
+                  }
+                }} 
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <div className="grid w-full max-w-sm items-center gap-1.5"></div>
       <FormField
         control={form.control}
         name="description"

@@ -30,6 +30,17 @@ const instructionsSection = "- Instructions Section : ";
 
 const formSchema = z.object({
   name: z.string().min(1, detailsSection + "Name is required"),
+  coverImage: z
+    .instanceof(File)
+    .refine((file) => file.size < 10 * 1024 * 1024, {
+      message: "Cover image must be less than 10MB",
+    })
+    .refine(
+      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+      {
+        message: "Cover image must be a JPEG, PNG,  or WebP",
+      },
+    ),
   description: z
     .string()
     .min(10, detailsSection + "Description must be at least 10 characters")
@@ -57,18 +68,22 @@ const NewRecipeContext = createContext<{
   form: UseFormReturn<FormValues>;
   onSubmit: (data: FormValues) => void;
   activeTab: string;
+  coverInfos: File | null;
+  setCoverInfos: (image: File | null) => void;
   setActiveTab: (tab: string) => void;
   fields: FieldArrayWithId<FormValues, "ingredients">[];
   append: UseFieldArrayAppend<FormValues, "ingredients">;
   remove: UseFieldArrayRemove;
 }>({
   form: {} as UseFormReturn<FormValues>,
-  onSubmit: () => {},
+  onSubmit: () => { },
   activeTab: "details",
-  setActiveTab: () => {},
+  coverInfos: null,
+  setCoverInfos: () => { },
+  setActiveTab: () => { },
   fields: {} as FieldArrayWithId<FormValues, "ingredients">[],
-  append: () => {},
-  remove: () => {},
+  append: () => { },
+  remove: () => { },
 });
 
 export default function NewRecipeProvider({
@@ -76,17 +91,20 @@ export default function NewRecipeProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [activeTab, setActiveTab] = useState("details");
   const router = useRouter();
+
+  const [activeTab, setActiveTab] = useState("details");
+  const [coverInfos, setCoverInfos] = useState<File | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      preparationTime: 0,
-      servings: 0,
-      countryCode: "",
+      name: "Test cake",
+      description: "New description test",
+      preparationTime: 45,
+      servings: 3,
+      countryCode: "FR",
+      ingredients: [{ name: "", quantity: 1, unit: "" }],
       recipe: "",
       youtubeLink: "",
       anonymous: false,
@@ -100,18 +118,61 @@ export default function NewRecipeProvider({
 
   async function onSubmit(data: FormValues) {
     console.log("Form submitted:", data);
+    console.log("Cover image info:", coverInfos);
+
     const res = await CallAPI(
       "POST",
       CallAPIURL.dishes.get,
       "",
-      { ...data },
-      true
+      { userId: "f57ac297-c63e-43bb-bbcd-f176eea529d1", ...data },
+      true,
     );
     console.log("Response:", res);
+    const dish = res.data.response;
+
+    if (!coverInfos) {
+      alert("Recipe created successfully!");
+      return;
+    }
+
+    if (!dish) {
+      alert("An error occurred while creating the recipe");
+      return;
+    }
+
+    const formattedName = dish.name.replace(/ /g, "_").toLowerCase();
+    const presignedUrlData = await CallAPI(
+      "GET",
+      CallAPIURL.generatePresignedUrl.get +
+      `?filename=covers/${formattedName}-${dish.id}.${coverInfos?.type?.split("/")[1]} `,
+    );
+
+    const presignedUrl = presignedUrlData.data.response;
+    console.log("Presigned URL:", presignedUrl);
+
+    const uploadImage = await fetch(presignedUrl.url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": coverInfos.type,
+        "x-amz-acl": "public-read-write",
+      },
+      body: coverInfos,
+    });
+
+    const cleanedUrl = presignedUrl.url.split("?")[0];
+
+    const linkImageToDish = await CallAPI(
+      "POST",
+      CallAPIURL.dishes.getById(dish.id) + `/images`,
+      "",
+      { link: cleanedUrl, isCover: true },
+      true,
+    );
+    console.log({ res, presignedUrl, uploadImage });
     // Here you would typically send the data to your API
     // For now, we'll just show a success message and redirect
     alert("Recipe created successfully!");
-    // router.push("/recipes");
+    router.push("/recipes");
   }
 
   useEffect(() => {
@@ -141,12 +202,20 @@ export default function NewRecipeProvider({
     }
   }, [form.formState.isSubmitted, form.formState.isSubmitting]);
 
+  useEffect(() => {
+    if (coverInfos) {
+      form.setValue("coverImage", coverInfos);
+    }
+  }, [coverInfos, form, activeTab]);
+
   return (
     <NewRecipeContext.Provider
       value={{
         form,
         onSubmit,
         activeTab,
+        coverInfos,
+        setCoverInfos,
         setActiveTab,
         fields,
         append,

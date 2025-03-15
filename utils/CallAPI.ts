@@ -26,7 +26,7 @@ export default async function CallAPI(
   resource: string,
   parameters?: any,
   payload?: any,
-  logRequest: boolean = true
+  logRequest: boolean = true,
 ) {
   /* // Remove csrf and userId from the payload
   let csrfToken: string;
@@ -64,7 +64,7 @@ export default async function CallAPI(
       resource,
       parameters,
       payload,
-      response
+      response,
     );
   }
 
@@ -77,7 +77,7 @@ export const CallAPIURL = {
     getById: (id: string) => `dishes/${id}`,
   },
   generatePresignedUrl: {
-    get: `generatePresignedUrl`
+    get: `generate-presigned-url`,
   },
   ratings: {
     get: `ratings`,
@@ -85,5 +85,5 @@ export const CallAPIURL = {
   },
   users: {
     get: `users`,
-  }
+  },
 };

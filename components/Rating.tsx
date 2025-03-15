@@ -83,7 +83,7 @@ export default function Rating({
           <Button type="button" variant="outline" onClick={openModal}>
             Rate
           </Button>
-          <RateModal open={openRatingModal} setOpen={setOpenRatingModal} />
+          <RateModal open={openRatingModal} setOpen={setOpenRatingModal} dishId={dish.id} />
         </>
       )}
     </div>
