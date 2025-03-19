@@ -1,10 +1,10 @@
 import NextAuth from "next-auth";
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-//import EmailProvider from "next-auth/providers/email";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import config from "@/config";
 import connectMongo from "./mongo";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface NextAuthOptionsExtended extends NextAuthOptions {
   adapter: any;
@@ -31,6 +31,7 @@ export const authOptions: NextAuthOptionsExtended = {
     // Follow the "Login with Email" tutorial to set up your email server
     // Requires a MongoDB database. Set MONOGODB_URI env variable.
     /* ...(connectMongo
+    /* ...(connectMongo
       ? [
           EmailProvider({
             server: {
@@ -52,15 +53,44 @@ export const authOptions: NextAuthOptionsExtended = {
   ...(connectMongo && { adapter: MongoDBAdapter(connectMongo) }),
 
   callbacks: {
-    session: async ({ session, token }) => {
-      if (session?.user) {
-        session.user.id = token.sub;
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.sub = user.email; // Override sub with email
+        token.googleId = user.id; // Store Google ID separately
+        delete token.email; // Remove email from the token
       }
+      return token;
+    },
+    session: async ({ session, token }) => {
+      session.user.email = token.sub;
       return session;
     },
   },
   session: {
     strategy: "jwt",
+  },
+  jwt: {
+    async encode({ token, secret, maxAge }) {
+      return jwt.sign(token, secret, { expiresIn: maxAge, algorithm: "HS256" });
+    },
+
+    async decode({ token, secret }) {
+      try {
+        // Decode JWT and verify it using the secret
+        const decodedToken = jwt.verify(token, secret) as JwtPayload;
+
+        // Convert the decoded JWT into a JWT object
+        return {
+          sub: decodedToken.sub,
+          email: decodedToken.email,
+          name: decodedToken.name,
+          picture: decodedToken.picture,
+          iat: decodedToken.iat,
+        };
+      } catch (err) {
+        return null; // Return null if JWT is invalid or expired
+      }
+    },
   },
   theme: {
     brandColor: config.colors.main,

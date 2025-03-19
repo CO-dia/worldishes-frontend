@@ -21,7 +21,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
       <NextTopLoader color={config.colors.main} showSpinner={false} />
 
       <Suspense fallback={<div>Loading...</div>}>
-        <Header session={session}/>
+        <Header session={session} />
       </Suspense>
 
       <main className="flex flex-col my-10 w-[95vw] md:w-[80vw] lg:w-[75vw]">
@@ -33,6 +33,7 @@ const Layout = async ({ children }: { children: ReactNode }) => {
       <Toaster
         toastOptions={{
           duration: 3000,
+          position: "bottom-right",
         }}
       />
 

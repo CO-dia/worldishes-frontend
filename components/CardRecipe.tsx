@@ -48,7 +48,7 @@ export function CardRecipe({ recipe }: { recipe: Dish }) {
               {recipe.servings ?? "?"} servings
             </span>
             <span className="text-6xl">
-              {getUnicodeFlagIcon(recipe.countryCode)}
+              {recipe.countryCode && getUnicodeFlagIcon(recipe.countryCode)}
             </span>
           </div>
         </CardContent>

@@ -11,8 +11,6 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
 
   // Function to handle changes in the editor
   const onEditorStateChange = (newEditorState: EditorState) => {
-    console.log("New Editor State:", newEditorState);
-    console.log("Lenght:", length);
     const content = newEditorState.getCurrentContent();
     const plainText = content.getPlainText(); // Extract plain text
     const tempLength = plainText.length;
@@ -57,7 +55,6 @@ const CustomEditor = ({ onChange }: { onChange: (value: string) => void }) => {
   const saveContent = () => {
     const contentState = editorState.getCurrentContent();
     const rawContent = convertToRaw(contentState);
-    console.log("Saved Content:", JSON.stringify(rawContent)); // Save to DB
     onChange(JSON.stringify(rawContent));
   };
 

@@ -18,13 +18,12 @@ function constructUrl(resource: string): string {
 }
 
 export async function GET(request: NextRequest) {
-  console.log("GET callOut");
   let response;
 
   try {
     const { searchParams } = new URL(request.url);
 
-    const jwt = request.cookies.get("currentUser")?.value;
+    const authToken = request.cookies.get("next-auth.session-token").value;
 
     const validationData = await securityValidation(request, "GET", 10);
     if (validationData.status !== 200) {
@@ -44,12 +43,10 @@ export async function GET(request: NextRequest) {
 
     const url = constructUrl(values.resource);
 
-    console.log("GET callOut", url, values.parameters);
-
     const res = await axiosInstance.get(url, {
       params: values.parameters,
       headers: {
-        Authorization: `Bearer ${jwt}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
     response = new Response(JSON.stringify({ response: res.data }));
@@ -63,11 +60,6 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions);
-  console.log({ session });
-
-  console.log("POST callOut");
-
   const authToken = request.cookies.get("next-auth.session-token").value;
   if (!authToken) {
     return new Response(JSON.stringify({ error: "Unauthorized access" }), {
@@ -88,15 +80,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("securityValidation", validationData);
-
     const values = {
       resource: searchParams.get("resource"),
       parameters: searchParams.get("parameters"),
       payload: await request.json(),
     };
 
-    console.log("values POST", values);
     if (values.parameters) {
       values.parameters = JSON.parse(values.parameters);
     }
@@ -119,8 +108,6 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  console.log("PUT callOut");
-
   const authToken = request.cookies.get("next-auth.session-token").value;
   if (!authToken) {
     return new Response(JSON.stringify({ error: "Unauthorized access" }), {

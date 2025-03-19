@@ -55,7 +55,6 @@ export default function RateModal({
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data);
     const res = await CallAPI("POST", CallAPIURL.ratings.get, "", {
       userId: "f57ac297-c63e-43bb-bbcd-f176eea529d1",
       dishId: dishId,

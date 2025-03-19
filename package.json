@@ -33,6 +33,7 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "form-data": "^4.0.0",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.477.0",
     "mongodb": "^5.9.2",
     "mongoose": "^7.6.10",

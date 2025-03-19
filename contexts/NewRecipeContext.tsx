@@ -17,9 +17,10 @@ import {
 // Navigation
 import { useRouter } from "next/navigation";
 import CallAPI, { CallAPIURL } from "@/utils/CallAPI";
+import toast from "react-hot-toast";
 
 const ingredientSchema = z.object({
-  name: z.string(),
+  ingredient: z.string(),
   quantity: z.number(),
   unit: z.string(),
 });
@@ -32,13 +33,15 @@ const formSchema = z.object({
   name: z.string().min(1, detailsSection + "Name is required"),
   coverImage: z
     .instanceof(File)
-    .refine((file) => file.size < 10 * 1024 * 1024, {
+    .optional()
+    .refine((file) => !file || file.size < 10 * 1024 * 1024, {
       message: "Cover image must be less than 10MB",
     })
     .refine(
-      (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+      (file) =>
+        !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type), // Check file type if file is present
       {
-        message: "Cover image must be a JPEG, PNG,  or WebP",
+        message: "Cover image must be a JPEG, PNG, or WebP",
       },
     ),
   description: z
@@ -99,12 +102,12 @@ export default function NewRecipeProvider({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "Test cake",
-      description: "New description test",
-      preparationTime: 45,
-      servings: 3,
-      countryCode: "FR",
-      ingredients: [{ name: "", quantity: 1, unit: "" }],
+      name: "",
+      description: "",
+      preparationTime: 0,
+      servings: 1,
+      countryCode: "",
+      ingredients: [{ ingredient: "", quantity: 1, unit: "" }],
       recipe: "",
       youtubeLink: "",
       anonymous: false,
@@ -117,9 +120,6 @@ export default function NewRecipeProvider({
   });
 
   async function onSubmit(data: FormValues) {
-    console.log("Form submitted:", data);
-    console.log("Cover image info:", coverInfos);
-
     const res = await CallAPI(
       "POST",
       CallAPIURL.dishes.get,
@@ -127,20 +127,31 @@ export default function NewRecipeProvider({
       { userId: "f57ac297-c63e-43bb-bbcd-f176eea529d1", ...data },
       true,
     );
-    console.log("Response:", res);
+
     const dish = res.data.response;
 
+    // Add ingredients to dish
+    await CallAPI(
+      "POST",
+      CallAPIURL.dishes.getIngredients(dish.id),
+      "",
+      data.ingredients,
+      true,
+    );
+
     if (!coverInfos) {
-      alert("Recipe created successfully!");
+      toast.success("Recipe created successfully!");
       return;
     }
 
     if (!dish) {
-      alert("An error occurred while creating the recipe");
+      toast.error("An error occurred while creating the recipe");
       return;
     }
 
     const formattedName = dish.name.replace(/ /g, "_").toLowerCase();
+
+    // Get a presigned URL from the API
     const presignedUrlData = await CallAPI(
       "GET",
       CallAPIURL.generatePresignedUrl.get +
@@ -148,9 +159,9 @@ export default function NewRecipeProvider({
     );
 
     const presignedUrl = presignedUrlData.data.response;
-    console.log("Presigned URL:", presignedUrl);
 
-    const uploadImage = await fetch(presignedUrl.url, {
+    // Upload the image to S3
+    fetch(presignedUrl.url, {
       method: "PUT",
       headers: {
         "Content-Type": coverInfos.type,
@@ -161,17 +172,18 @@ export default function NewRecipeProvider({
 
     const cleanedUrl = presignedUrl.url.split("?")[0];
 
-    const linkImageToDish = await CallAPI(
+    // Add the image to the dish
+    await CallAPI(
       "POST",
       CallAPIURL.dishes.getById(dish.id) + `/images`,
       "",
       { link: cleanedUrl, isCover: true },
       true,
     );
-    console.log({ res, presignedUrl, uploadImage });
+
     // Here you would typically send the data to your API
     // For now, we'll just show a success message and redirect
-    alert("Recipe created successfully!");
+    toast.success("Recipe created successfully!");
     router.push("/recipes");
   }
 

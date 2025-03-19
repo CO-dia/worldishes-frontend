@@ -53,7 +53,7 @@ export function IngredientsRecipe() {
         >
           <FormField
             control={form.control}
-            name={`ingredients.${index}.name`}
+            name={`ingredients.${index}.ingredient`}
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel>Ingredient</FormLabel>

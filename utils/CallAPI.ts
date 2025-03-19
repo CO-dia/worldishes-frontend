@@ -75,6 +75,7 @@ export const CallAPIURL = {
   dishes: {
     get: `dishes`,
     getById: (id: string) => `dishes/${id}`,
+    getIngredients: (id: string) => `dishes/${id}/ingredients`,
   },
   generatePresignedUrl: {
     get: `generate-presigned-url`,

@@ -4,10 +4,11 @@ import { Image as ImageType } from "@/types/image";
 import getUnicodeFlagIcon from "country-flag-icons/unicode";
 import Image from "next/image";
 import Rating from "@/components/Rating";
-import { CookingPot, Youtube } from "lucide-react";
+import { CookingPot, ListChecks, Youtube } from "lucide-react";
 import dynamic from "next/dynamic";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/libs/next-auth";
+import { Ingredient } from "@/types/ingredient";
 
 const RecipeEditor = dynamic(() => import("@/components/DisplayRecipe"), {
   ssr: false,
@@ -15,10 +16,9 @@ const RecipeEditor = dynamic(() => import("@/components/DisplayRecipe"), {
 
 // Fetch recipes on the server for SEO
 const getRecipeById = async (id: string): Promise<Dish> => {
-  console.log({ id });
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}`,
-    { cache: "no-store" }
+    { cache: "no-store" },
   );
 
   return res.json();
@@ -27,7 +27,16 @@ const getRecipeById = async (id: string): Promise<Dish> => {
 const getImages = async (id: string): Promise<Array<ImageType>> => {
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}/images`,
-    { cache: "no-store" }
+    { cache: "no-store" },
+  );
+
+  return res.json();
+};
+
+const getIngredients = async (id: string): Promise<Array<Ingredient>> => {
+  const res = await fetch(
+    `${process.env.API_URL}${process.env.API_VERSION}dishes/${id}/ingredients`,
+    { cache: "no-store" },
   );
 
   return res.json();
@@ -35,15 +44,17 @@ const getImages = async (id: string): Promise<Array<ImageType>> => {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const recipe = await getRecipeById(params.id);
+  const ingredients = await getIngredients(params.id);
   const images = await getImages(params.id);
   const session = await getServerSession(authOptions);
   const recipeTitle = recipe.name;
   const imageUrl = images?.[0]?.link ?? "/images/placeholder-recipe.jpg";
 
+  console.log({ ingredients });
   const title = (countryCode: string) => {
     return (
       <>
-        {getUnicodeFlagIcon(countryCode)}
+        {countryCode && getUnicodeFlagIcon(countryCode)}
         <h1>{recipeTitle}</h1>
       </>
     );
@@ -54,9 +65,8 @@ export default async function Page({ params }: { params: { id: string } }) {
       <div className="relative w-full aspect-[16/9] mb-5">
         <Image
           src={imageUrl}
-          alt={`Image of ${recipe.name} from ${getUnicodeFlagIcon(
-            recipe.countryCode
-          )}`}
+          alt={`Image of ${recipe.name} from ${recipe.countryCode && getUnicodeFlagIcon(recipe.countryCode)
+            }`}
           layout="fill" // Forces it to fill the container
           objectFit="cover" // Keeps original aspect ratio and fits inside
           priority
@@ -89,6 +99,23 @@ export default async function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
 
+      {/* Ingredients Instructions Section */}
+      {ingredients && (
+        <section className="details-sections">
+          <div className="flex items-center gap-4">
+            <ListChecks className="w-8 h-8 md:w-12 md:h-12" />
+            <h2 className="font-semibold text-gray-800">Ingredients</h2>
+          </div>
+          <ul className="m-4 px-8 py-4 border border-gray-200 rounded-lg shadow list-disc list-inside">
+            {ingredients.map((ingredient) => (
+              <li key={ingredient.id}>
+                {ingredient.quantity} {ingredient.unit} {ingredient.ingredient}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {/* Recipe Instructions Section */}
       <section className="details-sections">
         <div className="flex items-center gap-4">
@@ -111,7 +138,7 @@ export default async function Page({ params }: { params: { id: string } }) {
             <iframe
               className="w-full h-64 rounded-lg shadow-lg"
               src={`https://www.youtube.com/embed/${new URL(
-                recipe.youtubeLink
+                recipe.youtubeLink, 
               ).searchParams.get("v")}`}
               title="Recipe Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

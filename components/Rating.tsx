@@ -27,7 +27,7 @@ export default function Rating({
 
   const [rating, setRating] = useState<RatingType>();
   const [openRatingModal, setOpenRatingModal] = useState(
-    session && isRating === "true"
+    session && isRating === "true",
   );
 
   const openModal = () => {
@@ -35,16 +35,10 @@ export default function Rating({
       setOpenRatingModal(true);
     } else {
       router.push(
-        `/api/auth/signin?callbackUrl=%2Frecipes%2F${dish?.id}?rating=true`
+        `/api/auth/signin?callbackUrl=%2Frecipes%2F${dish?.id}?rating=true`,
       );
     }
   };
-
-  useEffect(() => {
-    if (isRating && session) {
-      console.log("Rating", isRating);
-    }
-  }, [isRating]);
 
   {
     /* useEffect(() => {
@@ -75,7 +69,8 @@ export default function Rating({
         })}
       </div>
       <span className="text-gray-600">
-        ({dish.ratingAverage ?? 0}){` • ${dish?.ratingCount ?? 0}`}
+        ({(dish.ratingAverage && dish.ratingAverage.toFixed(1)) ?? 0})
+        {` • ${dish?.ratingCount ?? 0}`}
       </span>
 
       {canRate && (
@@ -83,7 +78,11 @@ export default function Rating({
           <Button type="button" variant="outline" onClick={openModal}>
             Rate
           </Button>
-          <RateModal open={openRatingModal} setOpen={setOpenRatingModal} dishId={dish.id} />
+          <RateModal
+            open={openRatingModal}
+            setOpen={setOpenRatingModal}
+            dishId={dish.id}
+          />
         </>
       )}
     </div>
