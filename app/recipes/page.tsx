@@ -5,6 +5,7 @@ import { CardRecipe } from "@/components/CardRecipe";
 const getRecipes = async (): Promise<Array<Dish>> => {
   const res = await fetch(
     `${process.env.API_URL}${process.env.API_VERSION}dishes`,
+    { next: { revalidate: 60 } }
   );
 
   return res.json();

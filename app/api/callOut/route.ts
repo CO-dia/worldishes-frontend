@@ -1,7 +1,5 @@
-import { authOptions } from "@/libs/next-auth";
 import { rateLimitByKey } from "@/utils/RateLimiter";
 import Axios from "axios";
-import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 // Shared Axios instance
