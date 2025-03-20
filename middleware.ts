@@ -3,11 +3,13 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   // Example: Check if the user is authenticated
-  const token = request.cookies.get("next-auth.session-token")?.value;
+  const token =
+    request.cookies.get("next-auth.session-token")?.value ||
+    request.cookies.get("__Secure-next-auth.session-token")?.value;
 
   if (!token) {
     return NextResponse.redirect(
-      new URL("/api/auth/signin?callbackUrl=%2Frecipes", request.url)
+      new URL("/api/auth/signin?callbackUrl=%2Frecipes", request.url),
     );
   }
 

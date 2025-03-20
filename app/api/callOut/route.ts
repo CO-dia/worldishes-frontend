@@ -23,7 +23,9 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const authToken = request.cookies.get("next-auth.session-token").value;
+    const authToken =
+      request.cookies.get("next-auth.session-token").value ||
+      request.cookies.get("__Secure-next-auth.session-token")?.value;
 
     const validationData = await securityValidation(request, "GET", 10);
     if (validationData.status !== 200) {
@@ -60,7 +62,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const authToken = request.cookies.get("next-auth.session-token").value;
+  const authToken =
+    request.cookies.get("next-auth.session-token").value ||
+    request.cookies.get("__Secure-next-auth.session-token")?.value;
   if (!authToken) {
     return new Response(JSON.stringify({ error: "Unauthorized access" }), {
       status: 401,
@@ -76,7 +80,7 @@ export async function POST(request: NextRequest) {
     if (validationData.status !== 200) {
       return NextResponse.json(
         { error: validationData.error },
-        { status: validationData.status },
+        { status: validationData.status }
       );
     }
 
@@ -108,7 +112,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const authToken = request.cookies.get("next-auth.session-token").value;
+  const authToken =
+    request.cookies.get("next-auth.session-token").value ||
+    request.cookies.get("__Secure-next-auth.session-token")?.value;
   if (!authToken) {
     return new Response(JSON.stringify({ error: "Unauthorized access" }), {
       status: 401,
@@ -164,7 +170,7 @@ export async function PUT(request: NextRequest) {
 async function securityValidation(
   request: NextRequest,
   keyPrefix: string,
-  limit?: number,
+  limit?: number
 ): Promise<{ status: number; error: string }> {
   let response: { status: number; error: string } = { status: 200, error: "" };
   try {

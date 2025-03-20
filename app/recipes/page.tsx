@@ -12,7 +12,6 @@ const getRecipes = async (): Promise<Array<Dish>> => {
 
 export default async function Page() {
   const recipes = await getRecipes();
-  console.log({ recipes });
 
   return (
     <>
