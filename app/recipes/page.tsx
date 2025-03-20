@@ -17,7 +17,7 @@ export default async function Page() {
     <>
       <h1>Recipes</h1>
       <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {recipes &&
+        {recipes && recipes.length > 0 &&
           recipes.map((recipe) => (
             <CardRecipe recipe={recipe} key={recipe.id} />
           ))}
