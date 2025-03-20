@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     const authToken =
-      request.cookies.get("next-auth.session-token").value ||
+      request.cookies.get("next-auth.session-token")?.value ||
       request.cookies.get("__Secure-next-auth.session-token")?.value;
 
     const validationData = await securityValidation(request, "GET", 10);
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const authToken =
-    request.cookies.get("next-auth.session-token").value ||
+    request.cookies.get("next-auth.session-token")?.value ||
     request.cookies.get("__Secure-next-auth.session-token")?.value;
   if (!authToken) {
     return new Response(JSON.stringify({ error: "Unauthorized access" }), {
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   const authToken =
-    request.cookies.get("next-auth.session-token").value ||
+    request.cookies.get("next-auth.session-token")?.value ||
     request.cookies.get("__Secure-next-auth.session-token")?.value;
   if (!authToken) {
     return new Response(JSON.stringify({ error: "Unauthorized access" }), {
