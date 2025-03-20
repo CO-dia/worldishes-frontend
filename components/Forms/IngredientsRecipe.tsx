@@ -131,7 +131,7 @@ export function IngredientsRecipe() {
         variant="outline"
         className="w-full"
         size="sm"
-        onClick={() => append({ name: "", quantity: 0, unit: "" })}
+        onClick={() => append({ ingredient: "", quantity: 0, unit: "" })}
       >
         <Plus className="h-4 w-4 mr-2" />
         Add Ingredient
