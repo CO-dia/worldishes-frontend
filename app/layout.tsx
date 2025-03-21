@@ -5,6 +5,7 @@ import Layout from "@/components/Layout";
 import config from "@/config";
 import "./globals.css";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { Analytics } from "@vercel/analytics/react";
 
 export const viewport: Viewport = {
   // Will use the primary color of your theme to show a nice theme color in the URL bar of supported browsers
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="flex flex-col items-center">
         {/* ClientLayout contains all the client wrappers (Crisp chat support, toast messages, tooltips, etc.) */}
         <Layout>{children}</Layout>
+        <Analytics />
       </body>
     </html>
   );
