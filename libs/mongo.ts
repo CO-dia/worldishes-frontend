@@ -10,7 +10,10 @@ declare global {
 }
 
 const uri = process.env.MONGODB_URI;
-const options = {};
+const options = {
+  serverSelectionTimeoutMS: 60000, // Increase to 60 seconds
+  connectTimeoutMS: 60000,
+};
 
 let client: MongoClient | undefined;
 let clientPromise: Promise<MongoClient> | undefined;
@@ -18,10 +21,10 @@ let clientPromise: Promise<MongoClient> | undefined;
 if (!uri) {
   console.group("⚠️ MONGODB_URI missing from .env");
   console.error(
-    "It's not mandatory but a database is required for Magic Links."
+    "It's not mandatory but a database is required for Magic Links.",
   );
   console.error(
-    "If you don't need it, remove the code from /libs/next-auth.js (see connectMongo())"
+    "If you don't need it, remove the code from /libs/next-auth.js (see connectMongo())",
   );
   console.groupEnd();
 } else if (process.env.NODE_ENV === "development") {
