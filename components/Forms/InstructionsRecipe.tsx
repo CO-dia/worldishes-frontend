@@ -12,6 +12,7 @@ import { Input } from "../ui/input";
 import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import dynamic from "next/dynamic";
+import { Oval } from "react-loader-spinner";
 
 // Dynamically import CustomEditor (only on the client)
 const CustomEditor = dynamic(() => import("../CustomEditor"), { ssr: false });
@@ -95,7 +96,18 @@ export default function InstructionsRecipe() {
         >
           Back: Ingredients
         </Button>
-        <Button type="submit">Create Recipe</Button>
+        <Button type="submit">
+          {form.formState.isSubmitting ? (
+            <Oval
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="oval-loading"
+            />
+          ) : (
+            "Create Recipe"
+          )}
+        </Button>
       </div>
     </>
   );
